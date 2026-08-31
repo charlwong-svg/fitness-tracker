@@ -5,7 +5,7 @@ import {
 import {
   Home, Utensils, Dumbbell, Ruler, TrendingUp, User, Plus, Trash2,
   ChevronLeft, ChevronRight, Search, X, Cloud, CloudOff, RefreshCw, AlertCircle, LogOut,
-  Footprints, Link2, Unlink,
+  Footprints, Link2, Unlink, Smile,
 } from "lucide-react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, firebaseEnabled } from "./firebase.js";
@@ -19,21 +19,22 @@ import {
 /* Style tokens                                                            */
 /* ---------------------------------------------------------------------- */
 
-const C_JADE = "#1B6F5A";
+const C_JADE = "#0E4438";
 const C = {
-  bg: "#EEF1EA",
-  bgAlt: "#E4E9DF",
+  bg: "#E9EAE2",
+  bgAlt: "#DFE1D5",
   surface: "#FFFFFF",
-  ink: "#1B2B27",
-  muted: "#6B7D77",
+  ink: "#151F1B",
+  muted: "#666B5F",
   jade: C_JADE,
-  jadeDark: "#0F4438",
-  jadeTint: "#E1EEE8",
-  turmeric: "#D98F2B",
-  turmericTint: "#FBEDD9",
-  chili: "#C1452B",
-  line: "#E0E4DA",
-  lineSoft: "#EAEDE5",
+  jadeDark: "#082821",
+  jadeTint: "#E1E7E0",
+  turmeric: "#A17A2E",
+  turmericTint: "#F0E7D3",
+  chili: "#8C3B2A",
+  line: "#D8DBCC",
+  lineSoft: "#E4E6DA",
+  gold: "#B79352",
 };
 const F = {
   display: "'Fraunces', Georgia, serif",
@@ -41,19 +42,19 @@ const F = {
   mono: "'JetBrains Mono', ui-monospace, Menlo, monospace",
 };
 const SHADOW = {
-  card: "0 1px 2px rgba(15,68,56,0.05), 0 6px 16px -4px rgba(15,68,56,0.10)",
-  cardSm: "0 1px 2px rgba(15,68,56,0.05), 0 3px 8px -2px rgba(15,68,56,0.08)",
-  chit: "0 1px 1px rgba(27,43,39,0.04), 0 4px 10px -3px rgba(27,43,39,0.10)",
-  btn: "0 2px 6px -1px rgba(15,68,56,0.28)",
-  btnTurmeric: "0 2px 6px -1px rgba(180,110,20,0.30)",
-  ring: "0 4px 20px -6px rgba(15,68,56,0.28)",
+  card: "0 1px 2px rgba(8,40,33,0.06), 0 6px 16px -4px rgba(8,40,33,0.12)",
+  cardSm: "0 1px 2px rgba(8,40,33,0.06), 0 3px 8px -2px rgba(8,40,33,0.09)",
+  chit: "0 1px 1px rgba(21,31,27,0.05), 0 4px 10px -3px rgba(21,31,27,0.12)",
+  btn: "0 2px 6px -1px rgba(8,40,33,0.32)",
+  btnTurmeric: "0 2px 6px -1px rgba(161,122,46,0.35)",
+  ring: "0 4px 20px -6px rgba(8,40,33,0.30)",
 };
 
 const S = {
   app: { fontFamily: F.body, background: C.bg, minHeight: "100vh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
   header: { padding: "20px 18px 14px", background: `linear-gradient(180deg, ${C.bgAlt} 0%, ${C.bg} 100%)`, position: "relative" },
   headerTicket: { display: "flex", alignItems: "center", gap: 10 },
-  headerStamp: { width: 34, height: 34, borderRadius: "50%", background: C.jade, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: SHADOW.btn },
+  headerStamp: { width: 34, height: 34, borderRadius: "50%", background: C.jade, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: SHADOW.btn, border: `1.5px solid ${C.gold}` },
   headerBrandWrap: { display: "flex", flexDirection: "column" },
   headerBrand: { fontFamily: F.display, fontSize: 23, fontWeight: 700, letterSpacing: -0.4, color: C.ink, lineHeight: 1.1 },
   headerSub: { fontSize: 11.5, color: C.muted, fontStyle: "italic" },
@@ -108,7 +109,7 @@ const S = {
   select: { border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
 
   primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.jade}, ${C.jadeDark})`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btn },
-  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.turmeric}, #B4720F)`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btnTurmeric },
+  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.turmeric}, #7C5C1F)`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btnTurmeric },
   ghostBtn: { background: C.surface, border: `1px solid ${C.line}`, color: C.muted, borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
 
   totalBar: { display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "2px 4px" },
@@ -163,6 +164,26 @@ const FOOD_DB = [
   { id: "sg25", name: "Chicken Curry Rice", cat: "Singapore", serving: "1 plate", kcal: 650 },
   { id: "sg26", name: "Char Siu Rice", cat: "Singapore", serving: "1 plate", kcal: 550 },
   { id: "sg27", name: "Dim Sum Basket", cat: "Singapore", serving: "3 pieces", kcal: 250 },
+  { id: "sg28", name: "Fish Soup (with milk)", cat: "Singapore", serving: "1 bowl", kcal: 380 },
+  { id: "sg29", name: "Fish Soup (no milk, clear)", cat: "Singapore", serving: "1 bowl", kcal: 260 },
+  { id: "sg30", name: "Prawn Noodles (Hae Mee)", cat: "Singapore", serving: "1 bowl", kcal: 550 },
+  { id: "sg31", name: "Lor Mee", cat: "Singapore", serving: "1 bowl", kcal: 500 },
+  { id: "sg32", name: "Mee Siam", cat: "Singapore", serving: "1 plate", kcal: 450 },
+  { id: "sg33", name: "Ban Mian", cat: "Singapore", serving: "1 bowl", kcal: 480 },
+  { id: "sg34", name: "Yong Tau Foo", cat: "Singapore", serving: "1 bowl", kcal: 350 },
+  { id: "sg35", name: "Duck Rice", cat: "Singapore", serving: "1 plate", kcal: 600 },
+  { id: "sg36", name: "Roasted Meat Rice (Char Siew/Siew Yoke)", cat: "Singapore", serving: "1 plate", kcal: 600 },
+  { id: "sg37", name: "Otah", cat: "Singapore", serving: "2 pieces", kcal: 150 },
+  { id: "sg38", name: "Ngoh Hiang", cat: "Singapore", serving: "3 pieces", kcal: 250 },
+  { id: "sg39", name: "Ice Kacang", cat: "Singapore", serving: "1 bowl", kcal: 300 },
+  { id: "sg40", name: "Tau Huay (Soybean Pudding)", cat: "Singapore", serving: "1 bowl", kcal: 150 },
+  { id: "sg41", name: "Chee Cheong Fun", cat: "Singapore", serving: "3 rolls", kcal: 280 },
+  { id: "sg42", name: "Murtabak", cat: "Singapore", serving: "1 piece", kcal: 450 },
+  { id: "sg43", name: "Roti John", cat: "Singapore", serving: "1 piece", kcal: 500 },
+  { id: "sg44", name: "Nasi Briyani", cat: "Singapore", serving: "1 plate", kcal: 700 },
+  { id: "sg45", name: "Mee Rebus", cat: "Singapore", serving: "1 plate", kcal: 480 },
+  { id: "sg46", name: "Fishball Noodle Soup", cat: "Singapore", serving: "1 bowl", kcal: 400 },
+  { id: "sg47", name: "Thosai (Plain)", cat: "Singapore", serving: "1 piece", kcal: 180 },
   // Breakfast
   { id: "bf1", name: "Froot Loops", cat: "Breakfast", serving: "1 cup (30g)", kcal: 110 },
   { id: "bf2", name: "Goat Milk", cat: "Breakfast", serving: "1 cup (240ml)", kcal: 168 },
@@ -256,6 +277,9 @@ const fmtDateLabel = (dateStr) => {
   return d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
 };
 const uid = () => Math.random().toString(36).slice(2, 10);
+// Rough estimate: ~0.0005 kcal per step per kg of body weight, in line
+// with the ~40-50 kcal per 1,000 steps commonly cited for an average adult.
+const stepsToKcal = (steps, weightKg) => Math.round(0.0005 * (weightKg || 65) * (steps || 0));
 
 const STORAGE_PREFIX = "chittrack:";
 
@@ -431,10 +455,10 @@ export default function ChitTrack() {
       <header style={S.header}>
         <div style={S.headerTicket}>
           <div style={S.headerStamp}>
-            <Utensils size={16} color="#fff" strokeWidth={2.2} />
+            <Smile size={17} color="#fff" strokeWidth={2.2} />
           </div>
           <div style={S.headerBrandWrap}>
-            <span style={S.headerBrand}>ChitTrack</span>
+            <span style={S.headerBrand}>My Fitness Tracker</span>
             <span style={S.headerSub}>your daily food chit</span>
           </div>
         </div>
@@ -513,19 +537,20 @@ function TabBtn({ icon: Icon, label, active, onClick }) {
 /* Dashboard                                                               */
 /* ---------------------------------------------------------------------- */
 
-function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs, setStepLogs, profile, gfitConnected }) {
+function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs, setStepLogs, profile, gfitConnected, latestWeight }) {
   const date = todayStr();
   const todayFood = foodLogs.filter((f) => f.date === date);
   const todayEx = exerciseLogs.filter((e) => e.date === date);
+  const todaySteps = stepLogs.find((s) => s.date === date);
+  const stepKcal = stepsToKcal(todaySteps?.steps, latestWeight);
   const consumed = todayFood.reduce((s, f) => s + f.kcal * f.qty, 0);
-  const burned = todayEx.reduce((s, e) => s + Number(e.kcal), 0);
+  const burned = todayEx.reduce((s, e) => s + Number(e.kcal), 0) + stepKcal;
   const net = consumed - burned;
   const target = targetCalories;
   const remaining = target ? target - net : null;
   const pct = target ? Math.min(100, Math.max(0, (net / target) * 100)) : 0;
 
   const latestBody = [...bodyLogs].sort((a, b) => b.date.localeCompare(a.date))[0];
-  const todaySteps = stepLogs.find((s) => s.date === date);
 
   return (
     <div style={S.screen}>
@@ -579,10 +604,19 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
       )}
 
       <SectionLabel>Today's chits</SectionLabel>
-      {todayFood.length === 0 && todayEx.length === 0 && (
+      {todayFood.length === 0 && todayEx.length === 0 && !(todaySteps?.steps > 0) && (
         <EmptyHint icon={Utensils} text="Nothing logged yet today. Add a meal or a workout to get started." />
       )}
       {todayFood.map((f) => <Chit key={f.id} title={f.name} sub={`${f.meal} · x${f.qty}`} value={`${f.kcal * f.qty} kcal`} icon={Utensils} />)}
+      {todaySteps?.steps > 0 && (
+        <Chit
+          title="Steps"
+          sub={`${todaySteps.steps.toLocaleString()} steps · auto`}
+          value={`-${stepKcal} kcal`}
+          icon={Footprints}
+          accent={C.turmeric}
+        />
+      )}
       {todayEx.map((e) => <Chit key={e.id} title={e.name} sub={`${e.duration} min`} value={`-${e.kcal} kcal`} icon={Dumbbell} accent={C.turmeric} />)}
     </div>
   );
@@ -830,7 +864,7 @@ function DateNav({ date, setDate }) {
 /* Exercise Tab                                                            */
 /* ---------------------------------------------------------------------- */
 
-function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight }) {
+function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight, stepLogs }) {
   const [date, setDate] = useState(todayStr());
   const [selected, setSelected] = useState(null);
   const [duration, setDuration] = useState(30);
@@ -845,7 +879,9 @@ function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight }) {
   }, [selected, duration, weight]);
 
   const dayEntries = exerciseLogs.filter((e) => e.date === date);
-  const dayTotal = dayEntries.reduce((s, e) => s + Number(e.kcal), 0);
+  const daySteps = stepLogs.find((s) => s.date === date);
+  const stepKcal = stepsToKcal(daySteps?.steps, latestWeight);
+  const dayTotal = dayEntries.reduce((s, e) => s + Number(e.kcal), 0) + stepKcal;
 
   const addExercise = () => {
     const name = customMode ? customName.trim() : selected?.name;
@@ -910,7 +946,16 @@ function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight }) {
       </div>
 
       <SectionLabel>Logged workouts</SectionLabel>
-      {dayEntries.length === 0 && <EmptyHint icon={Dumbbell} text="No exercise logged for this day." />}
+      {dayEntries.length === 0 && !(daySteps?.steps > 0) && <EmptyHint icon={Dumbbell} text="No exercise logged for this day." />}
+      {daySteps?.steps > 0 && (
+        <Chit
+          title="Steps"
+          sub={`${daySteps.steps.toLocaleString()} steps · auto`}
+          value={`-${stepKcal} kcal`}
+          icon={Footprints}
+          accent={C.turmeric}
+        />
+      )}
       {dayEntries.map((e) => (
         <Chit key={e.id} title={e.name} sub={`${e.duration} min`} value={`-${e.kcal} kcal`} icon={Dumbbell} accent={C.turmeric} onDelete={() => removeEntry(e.id)} />
       ))}
