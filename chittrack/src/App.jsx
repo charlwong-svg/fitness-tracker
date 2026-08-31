@@ -234,11 +234,17 @@ const MEALS = ["Breakfast", "Lunch", "Dinner", "Snack"];
 /* Helpers                                                                 */
 /* ---------------------------------------------------------------------- */
 
-const todayStr = () => new Date().toISOString().slice(0, 10);
+const pad2 = (n) => String(n).padStart(2, "0");
+// Format a Date using its LOCAL calendar date (not toISOString, which
+// converts to UTC and silently shifts the date for any timezone ahead of
+// UTC — e.g. always one day early for Singapore, UTC+8).
+const toDateStr = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayStr = () => toDateStr(new Date());
 const addDays = (dateStr, n) => {
-  const d = new Date(dateStr + "T00:00:00");
-  d.setDate(d.getDate() + n);
-  return d.toISOString().slice(0, 10);
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  dt.setDate(dt.getDate() + n);
+  return toDateStr(dt);
 };
 const fmtDateLabel = (dateStr) => {
   const d = new Date(dateStr + "T00:00:00");
