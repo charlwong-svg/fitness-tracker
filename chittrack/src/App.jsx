@@ -137,53 +137,55 @@ button:active { transform: scale(0.97); }
 
 const FOOD_DB = [
   // Singapore hawker & local
-  { id: "sg1", name: "Chicken Rice", cat: "Singapore", serving: "1 plate", kcal: 600 },
-  { id: "sg2", name: "Laksa", cat: "Singapore", serving: "1 bowl", kcal: 550 },
-  { id: "sg3", name: "Char Kway Teow", cat: "Singapore", serving: "1 plate", kcal: 740 },
-  { id: "sg4", name: "Nasi Lemak", cat: "Singapore", serving: "1 packet", kcal: 650 },
-  { id: "sg5", name: "Roti Prata (plain)", cat: "Singapore", serving: "1 piece", kcal: 300 },
-  { id: "sg6", name: "Mee Goreng", cat: "Singapore", serving: "1 plate", kcal: 600 },
-  { id: "sg7", name: "Bak Kut Teh", cat: "Singapore", serving: "1 bowl", kcal: 350 },
+  { id: "sg1", name: "Chicken Rice", cat: "Singapore", serving: "1 plate", kcal: 617 },
+  { id: "sg2", name: "Laksa", cat: "Singapore", serving: "1 bowl", kcal: 700 },
+  { id: "sg3", name: "Char Kway Teow", cat: "Singapore", serving: "1 plate", kcal: 745 },
+  { id: "sg4", name: "Nasi Lemak (with egg & ikan bilis)", cat: "Singapore", serving: "1 packet", kcal: 494 },
+  { id: "sg5", name: "Roti Prata (plain)", cat: "Singapore", serving: "1 piece", kcal: 163 },
+  { id: "sg6", name: "Mee Goreng", cat: "Singapore", serving: "1 plate", kcal: 692 },
+  { id: "sg7", name: "Bak Kut Teh", cat: "Singapore", serving: "1 bowl", kcal: 324 },
   { id: "sg8", name: "Chilli Crab (w/ mantou)", cat: "Singapore", serving: "1 serving", kcal: 700 },
-  { id: "sg9", name: "Hokkien Mee", cat: "Singapore", serving: "1 plate", kcal: 600 },
+  { id: "sg9", name: "Hokkien Mee", cat: "Singapore", serving: "1 plate", kcal: 522 },
   { id: "sg10", name: "Satay", cat: "Singapore", serving: "5 sticks", kcal: 350 },
   { id: "sg11", name: "Kaya Toast Set (+2 eggs)", cat: "Singapore", serving: "1 set", kcal: 450 },
-  { id: "sg12", name: "Wanton Mee", cat: "Singapore", serving: "1 bowl", kcal: 500 },
+  { id: "sg12", name: "Wanton Mee (dry)", cat: "Singapore", serving: "1 bowl", kcal: 411 },
   { id: "sg13", name: "Fish Head Curry", cat: "Singapore", serving: "1 serving", kcal: 550 },
-  { id: "sg14", name: "Rojak", cat: "Singapore", serving: "1 plate", kcal: 400 },
-  { id: "sg15", name: "Curry Puff", cat: "Singapore", serving: "1 piece", kcal: 220 },
-  { id: "sg16", name: "Popiah", cat: "Singapore", serving: "1 roll", kcal: 180 },
-  { id: "sg17", name: "Chwee Kueh", cat: "Singapore", serving: "3 pieces", kcal: 200 },
-  { id: "sg18", name: "Fried Carrot Cake", cat: "Singapore", serving: "1 plate", kcal: 500 },
-  { id: "sg19", name: "Bee Hoon Goreng", cat: "Singapore", serving: "1 plate", kcal: 450 },
+  { id: "sg14", name: "Rojak (Chinese style)", cat: "Singapore", serving: "1 plate", kcal: 559 },
+  { id: "sg15", name: "Curry Puff (Chicken)", cat: "Singapore", serving: "1 piece", kcal: 339 },
+  { id: "sg16", name: "Popiah", cat: "Singapore", serving: "1 roll", kcal: 187 },
+  { id: "sg17", name: "Chwee Kueh", cat: "Singapore", serving: "3 pieces", kcal: 171 },
+  { id: "sg18", name: "Fried Carrot Cake (black/dark sauce)", cat: "Singapore", serving: "1 plate", kcal: 585 },
+  { id: "sg18b", name: "Fried Carrot Cake (white)", cat: "Singapore", serving: "1 plate", kcal: 403 },
+  { id: "sg19", name: "Bee Hoon Goreng", cat: "Singapore", serving: "1 plate", kcal: 369 },
   { id: "sg20", name: "Teh Tarik", cat: "Singapore", serving: "1 cup", kcal: 150 },
   { id: "sg21", name: "Kopi O", cat: "Singapore", serving: "1 cup", kcal: 20 },
   { id: "sg22", name: "Kopi", cat: "Singapore", serving: "1 cup", kcal: 120 },
   { id: "sg23", name: "Milo Dinosaur", cat: "Singapore", serving: "1 cup", kcal: 350 },
-  { id: "sg24", name: "Economic Rice (3 dishes)", cat: "Singapore", serving: "1 plate", kcal: 600 },
-  { id: "sg25", name: "Chicken Curry Rice", cat: "Singapore", serving: "1 plate", kcal: 650 },
-  { id: "sg26", name: "Char Siu Rice", cat: "Singapore", serving: "1 plate", kcal: 550 },
+  { id: "sg24", name: "Economic Rice (3 dishes)", cat: "Singapore", serving: "1 plate", kcal: 430 },
+  { id: "sg25", name: "Chicken Curry Rice", cat: "Singapore", serving: "1 plate", kcal: 550 },
+  { id: "sg26", name: "Char Siu Rice", cat: "Singapore", serving: "1 plate", kcal: 605 },
   { id: "sg27", name: "Dim Sum Basket", cat: "Singapore", serving: "3 pieces", kcal: 250 },
   { id: "sg28", name: "Fish Soup (with milk)", cat: "Singapore", serving: "1 bowl", kcal: 380 },
   { id: "sg29", name: "Fish Soup (no milk, clear)", cat: "Singapore", serving: "1 bowl", kcal: 260 },
-  { id: "sg30", name: "Prawn Noodles (Hae Mee)", cat: "Singapore", serving: "1 bowl", kcal: 550 },
-  { id: "sg31", name: "Lor Mee", cat: "Singapore", serving: "1 bowl", kcal: 500 },
-  { id: "sg32", name: "Mee Siam", cat: "Singapore", serving: "1 plate", kcal: 450 },
-  { id: "sg33", name: "Ban Mian", cat: "Singapore", serving: "1 bowl", kcal: 480 },
-  { id: "sg34", name: "Yong Tau Foo", cat: "Singapore", serving: "1 bowl", kcal: 350 },
-  { id: "sg35", name: "Duck Rice", cat: "Singapore", serving: "1 plate", kcal: 600 },
-  { id: "sg36", name: "Roasted Meat Rice (Char Siew/Siew Yoke)", cat: "Singapore", serving: "1 plate", kcal: 600 },
+  { id: "sg30", name: "Prawn Noodles (dry)", cat: "Singapore", serving: "1 bowl", kcal: 461 },
+  { id: "sg30b", name: "Prawn Noodles (soup)", cat: "Singapore", serving: "1 bowl", kcal: 294 },
+  { id: "sg31", name: "Lor Mee", cat: "Singapore", serving: "1 bowl", kcal: 595 },
+  { id: "sg32", name: "Mee Siam", cat: "Singapore", serving: "1 plate", kcal: 694 },
+  { id: "sg33", name: "Ban Mian", cat: "Singapore", serving: "1 bowl", kcal: 475 },
+  { id: "sg34", name: "Yong Tau Foo (noodles not incl.)", cat: "Singapore", serving: "1 bowl", kcal: 297 },
+  { id: "sg35", name: "Duck Rice (braised)", cat: "Singapore", serving: "1 plate", kcal: 604 },
+  { id: "sg36", name: "Roasted Meat Rice (Char Siew/Siew Yoke)", cat: "Singapore", serving: "1 plate", kcal: 605 },
   { id: "sg37", name: "Otah", cat: "Singapore", serving: "2 pieces", kcal: 150 },
   { id: "sg38", name: "Ngoh Hiang", cat: "Singapore", serving: "3 pieces", kcal: 250 },
   { id: "sg39", name: "Ice Kacang", cat: "Singapore", serving: "1 bowl", kcal: 300 },
-  { id: "sg40", name: "Tau Huay (Soybean Pudding)", cat: "Singapore", serving: "1 bowl", kcal: 150 },
+  { id: "sg40", name: "Tau Huay (with syrup)", cat: "Singapore", serving: "1 bowl", kcal: 342 },
   { id: "sg41", name: "Chee Cheong Fun", cat: "Singapore", serving: "3 rolls", kcal: 280 },
-  { id: "sg42", name: "Murtabak", cat: "Singapore", serving: "1 piece", kcal: 450 },
+  { id: "sg42", name: "Murtabak (Chicken)", cat: "Singapore", serving: "1 piece", kcal: 995 },
   { id: "sg43", name: "Roti John", cat: "Singapore", serving: "1 piece", kcal: 500 },
-  { id: "sg44", name: "Nasi Briyani", cat: "Singapore", serving: "1 plate", kcal: 700 },
-  { id: "sg45", name: "Mee Rebus", cat: "Singapore", serving: "1 plate", kcal: 480 },
-  { id: "sg46", name: "Fishball Noodle Soup", cat: "Singapore", serving: "1 bowl", kcal: 400 },
-  { id: "sg47", name: "Thosai (Plain)", cat: "Singapore", serving: "1 piece", kcal: 180 },
+  { id: "sg44", name: "Nasi Briyani (Chicken)", cat: "Singapore", serving: "1 plate", kcal: 877 },
+  { id: "sg45", name: "Mee Rebus", cat: "Singapore", serving: "1 plate", kcal: 571 },
+  { id: "sg46", name: "Fishball Noodle Soup", cat: "Singapore", serving: "1 bowl", kcal: 372 },
+  { id: "sg47", name: "Thosai (Plain)", cat: "Singapore", serving: "1 piece", kcal: 97 },
   // Breakfast
   { id: "bf1", name: "Froot Loops", cat: "Breakfast", serving: "1 cup (30g)", kcal: 110 },
   { id: "bf2", name: "Goat Milk", cat: "Breakfast", serving: "1 cup (240ml)", kcal: 168 },
@@ -370,20 +372,32 @@ export default function ChitTrack() {
     }
   }, [mergeStepLogs]);
 
-  // Auto-sync once on load if already connected, and again whenever the
-  // tab regains focus (closest thing to "automatic" a static web app can do).
+  // Auto-sync on load/connect, again whenever the tab regains focus (e.g.
+  // you switch back from another app), and on a periodic timer so it stays
+  // fresh even if you just leave the app open and idle on one screen.
   useEffect(() => {
     if (!googleFitEnabled || !gfitConnected) return;
     syncGoogleFit({ interactive: false });
     const onFocus = () => syncGoogleFit({ interactive: false });
     document.addEventListener("visibilitychange", onFocus);
     window.addEventListener("focus", onFocus);
+    const intervalId = setInterval(() => syncGoogleFit({ interactive: false }), 5 * 60 * 1000);
     return () => {
       document.removeEventListener("visibilitychange", onFocus);
       window.removeEventListener("focus", onFocus);
+      clearInterval(intervalId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gfitConnected]);
+
+  // Also refresh whenever you switch to a tab where steps are visible —
+  // in-app tab changes don't fire focus/visibilitychange since the browser
+  // tab itself never actually loses focus, so this covers that gap.
+  useEffect(() => {
+    if (!googleFitEnabled || !gfitConnected) return;
+    if (tab === "dashboard" || tab === "exercise") syncGoogleFit({ interactive: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, gfitConnected]);
 
   const connectGoogleFit = () => syncGoogleFit({ interactive: true });
   const disconnectGoogleFit = () => {
