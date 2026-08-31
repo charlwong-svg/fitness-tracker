@@ -19,97 +19,115 @@ import {
 /* Style tokens                                                            */
 /* ---------------------------------------------------------------------- */
 
-const C_JADE = "#1F6F5C";
+const C_JADE = "#1B6F5A";
 const C = {
-  bg: "#F2F5F1",
+  bg: "#EEF1EA",
+  bgAlt: "#E4E9DF",
   surface: "#FFFFFF",
   ink: "#1B2B27",
   muted: "#6B7D77",
   jade: C_JADE,
-  jadeDark: "#175444",
-  jadeTint: "#E4EFEB",
-  turmeric: "#C97F1E",
-  chili: "#C2482B",
-  line: "#DEE5E0",
+  jadeDark: "#0F4438",
+  jadeTint: "#E1EEE8",
+  turmeric: "#D98F2B",
+  turmericTint: "#FBEDD9",
+  chili: "#C1452B",
+  line: "#E0E4DA",
+  lineSoft: "#EAEDE5",
 };
 const F = {
   display: "'Fraunces', Georgia, serif",
   body: "'Inter', system-ui, -apple-system, sans-serif",
   mono: "'JetBrains Mono', ui-monospace, Menlo, monospace",
 };
+const SHADOW = {
+  card: "0 1px 2px rgba(15,68,56,0.05), 0 6px 16px -4px rgba(15,68,56,0.10)",
+  cardSm: "0 1px 2px rgba(15,68,56,0.05), 0 3px 8px -2px rgba(15,68,56,0.08)",
+  chit: "0 1px 1px rgba(27,43,39,0.04), 0 4px 10px -3px rgba(27,43,39,0.10)",
+  btn: "0 2px 6px -1px rgba(15,68,56,0.28)",
+  btnTurmeric: "0 2px 6px -1px rgba(180,110,20,0.30)",
+  ring: "0 4px 20px -6px rgba(15,68,56,0.28)",
+};
 
 const S = {
   app: { fontFamily: F.body, background: C.bg, minHeight: "100vh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
-  header: { padding: "18px 18px 10px", background: C.bg },
-  headerTicket: { display: "flex", alignItems: "baseline", gap: 8 },
-  headerBrand: { fontFamily: F.display, fontSize: 24, fontWeight: 700, letterSpacing: -0.5, color: C.ink },
-  headerSub: { fontSize: 12, color: C.muted, fontStyle: "italic" },
-  syncBadge: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, marginTop: 4 },
-  main: { flex: 1, padding: "4px 16px 90px", overflowY: "auto" },
+  header: { padding: "20px 18px 14px", background: `linear-gradient(180deg, ${C.bgAlt} 0%, ${C.bg} 100%)`, position: "relative" },
+  headerTicket: { display: "flex", alignItems: "center", gap: 10 },
+  headerStamp: { width: 34, height: 34, borderRadius: "50%", background: C.jade, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: SHADOW.btn },
+  headerBrandWrap: { display: "flex", flexDirection: "column" },
+  headerBrand: { fontFamily: F.display, fontSize: 23, fontWeight: 700, letterSpacing: -0.4, color: C.ink, lineHeight: 1.1 },
+  headerSub: { fontSize: 11.5, color: C.muted, fontStyle: "italic" },
+  syncBadge: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, marginTop: 6, marginLeft: 44 },
+  headerPerf: { position: "absolute", left: 0, right: 0, bottom: -1, height: 1, backgroundImage: `linear-gradient(90deg, ${C.line} 50%, transparent 0%)`, backgroundSize: "10px 1px", backgroundRepeat: "repeat-x" },
+  main: { flex: 1, padding: "6px 16px 90px", overflowY: "auto" },
   screen: { display: "flex", flexDirection: "column", gap: 10 },
-  h2: { fontFamily: F.display, fontSize: 19, fontWeight: 700, margin: "6px 0 2px", color: C.ink },
-  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%" },
-  tabBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", padding: "4px 8px", cursor: "pointer" },
+  h2: { fontFamily: F.display, fontSize: 20, fontWeight: 700, margin: "8px 0 2px", color: C.ink, letterSpacing: -0.3 },
+  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%", boxShadow: "0 -4px 16px rgba(15,68,56,0.05)" },
+  tabBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", padding: "6px 14px", cursor: "pointer", borderRadius: 14, transition: "background 0.15s ease" },
+  tabBtnActive: { background: C.jadeTint },
 
-  card: { background: C.surface, borderRadius: 14, padding: 14, border: `1px solid ${C.line}`, display: "flex", flexDirection: "column", gap: 6 },
-  miniCard: { background: C.jadeTint, borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8 },
+  card: { background: C.surface, borderRadius: 16, padding: 15, border: `1px solid ${C.lineSoft}`, boxShadow: SHADOW.cardSm, display: "flex", flexDirection: "column", gap: 6 },
+  miniCard: { background: C.jadeTint, borderRadius: 14, padding: "11px 13px", display: "flex", alignItems: "center", gap: 10 },
+  miniCardIcon: { width: 30, height: 30, borderRadius: "50%", background: C.surface, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   stepBarTrack: { height: 5, width: 140, background: "#FFFFFF", borderRadius: 3, marginTop: 5, overflow: "hidden" },
-  stepBarFill: { height: "100%", background: C.jade, borderRadius: 3, transition: "width 0.3s ease" },
+  stepBarFill: { height: "100%", background: `linear-gradient(90deg, ${C.jade}, ${C.jadeDark})`, borderRadius: 3, transition: "width 0.3s ease" },
 
-  ringCard: { background: C.surface, borderRadius: 16, padding: 16, border: `1px solid ${C.line}`, display: "flex", alignItems: "center", gap: 16 },
+  ringCard: { background: `linear-gradient(160deg, ${C.surface} 0%, ${C.jadeTint} 130%)`, borderRadius: 20, padding: 18, border: `1px solid ${C.lineSoft}`, boxShadow: SHADOW.ring, display: "flex", alignItems: "center", gap: 16 },
   ringWrap: { position: "relative", flexShrink: 0 },
   ringCenter: { position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" },
-  ringStats: { flex: 1, display: "flex", flexDirection: "column", gap: 6 },
+  ringStats: { flex: 1, display: "flex", flexDirection: "column", gap: 7 },
   statRow: { display: "flex", justifyContent: "space-between", alignItems: "center" },
 
-  sectionLabel: { fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 0.6, marginTop: 8 },
-  emptyHint: { fontSize: 13, color: C.muted, background: C.surface, border: `1px dashed ${C.line}`, borderRadius: 12, padding: "16px 14px", textAlign: "center" },
+  sectionLabel: { display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: C.ink, marginTop: 10, marginBottom: 2 },
+  sectionDot: { width: 6, height: 6, borderRadius: "50%", background: C.turmeric, flexShrink: 0 },
+  emptyHint: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, fontSize: 13, color: C.muted, background: C.surface, border: `1.5px dashed ${C.line}`, borderRadius: 14, padding: "22px 18px", textAlign: "center" },
 
-  chit: { position: "relative", background: C.surface, border: `1px solid ${C.line}`, borderLeft: `3px dashed ${C.line}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 },
-  chitPerf: { display: "none" },
+  chit: { position: "relative", background: C.surface, borderRadius: 12, padding: "12px 13px 11px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, boxShadow: SHADOW.chit, overflow: "hidden" },
+  chitPerf: { position: "absolute", top: 0, left: 0, right: 0, height: 4, backgroundImage: `radial-gradient(circle at 6px 0px, ${C.bg} 3px, transparent 3.5px)`, backgroundSize: "12px 4px", backgroundRepeat: "repeat-x" },
 
   dateNav: { display: "flex", alignItems: "center", justifyContent: "center", gap: 14, padding: "4px 0" },
   iconBtn: { background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: 4 },
 
   mealTabs: { display: "flex", gap: 6, marginBottom: 4, flexWrap: "wrap" },
-  mealTab: { fontSize: 12, fontWeight: 600, color: C.muted, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 12px", cursor: "pointer" },
-  mealTabActive: { background: C.jade, color: "#fff", borderColor: C.jade },
+  mealTab: { fontSize: 12, fontWeight: 600, color: C.muted, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 12px", cursor: "pointer", transition: "all 0.15s ease" },
+  mealTabActive: { background: C.jade, color: "#fff", borderColor: C.jade, boxShadow: SHADOW.btn },
 
-  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px" },
+  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px" },
   searchInput: { border: "none", background: "none", outline: "none", fontSize: 14, flex: 1, color: C.ink, fontFamily: F.body },
 
   qtyRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 2px" },
   stepper: { display: "flex", alignItems: "center", gap: 8, background: C.bg, borderRadius: 20, padding: "3px 6px" },
-  stepperBtn: { width: 24, height: 24, borderRadius: "50%", border: "none", background: C.surface, color: C.ink, fontSize: 15, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 1px 0 ${C.line}` },
+  stepperBtn: { width: 26, height: 26, borderRadius: "50%", border: "none", background: C.surface, color: C.jade, fontSize: 16, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: SHADOW.cardSm },
 
-  resultsList: { display: "flex", flexDirection: "column", gap: 4, maxHeight: 260, overflowY: "auto" },
-  resultRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", textAlign: "left", width: "100%" },
+  resultsList: { display: "flex", flexDirection: "column", gap: 5, maxHeight: 260, overflowY: "auto" },
+  resultRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", cursor: "pointer", textAlign: "left", width: "100%", transition: "border-color 0.15s ease" },
 
   linkBtn: { alignSelf: "flex-start", background: "none", border: "none", color: C.jade, fontSize: 12.5, fontWeight: 700, cursor: "pointer", padding: "4px 2px" },
-  textInput: { border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", fontSize: 14, outline: "none", color: C.ink, fontFamily: F.body, width: "100%", boxSizing: "border-box" },
+  textInput: { border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", fontSize: 14, outline: "none", color: C.ink, fontFamily: F.body, width: "100%", boxSizing: "border-box", background: C.surface },
   fieldLabel: { fontSize: 11.5, fontWeight: 700, color: C.muted, marginTop: 4 },
-  select: { border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
+  select: { border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
 
-  primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.jade, color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1 },
-  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.turmeric, color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1 },
-  ghostBtn: { background: "none", border: `1px solid ${C.line}`, color: C.muted, borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
+  primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.jade}, ${C.jadeDark})`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btn },
+  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.turmeric}, #B4720F)`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btnTurmeric },
+  ghostBtn: { background: C.surface, border: `1px solid ${C.line}`, color: C.muted, borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
 
   totalBar: { display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "2px 4px" },
   pillRow: { display: "flex", gap: 6, flexWrap: "wrap" },
-  pill: { fontSize: 12.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "6px 13px", cursor: "pointer" },
-  pillSmall: { fontSize: 11.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 11px", cursor: "pointer" },
+  pill: { fontSize: 12.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "6px 13px", cursor: "pointer", transition: "all 0.15s ease" },
+  pillSmall: { fontSize: 11.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 11px", cursor: "pointer", transition: "all 0.15s ease" },
 
   footNote: { fontSize: 11.5, color: C.muted, lineHeight: 1.5, padding: "0 4px 10px" },
 };
 
 const CSS_BASE = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 * { box-sizing: border-box; }
-input:focus, select:focus { border-color: ${C.jade} !important; }
+input:focus, select:focus { border-color: ${C.jade} !important; box-shadow: 0 0 0 3px ${C.jadeTint}; }
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 button { font-family: inherit; }
+button:active { transform: scale(0.97); }
 `;
 
 /* ---------------------------------------------------------------------- */
@@ -162,6 +180,15 @@ const FOOD_DB = [
   { id: "bf14", name: "Banana", cat: "Breakfast", serving: "1 medium", kcal: 105 },
   { id: "bf15", name: "Cornflakes", cat: "Breakfast", serving: "1 cup", kcal: 100 },
   { id: "bf16", name: "Granola", cat: "Breakfast", serving: "1/2 cup", kcal: 300 },
+  { id: "bf17", name: "Honey Stars", cat: "Breakfast", serving: "1 cup (30g)", kcal: 113 },
+  { id: "bf18", name: "Koko Krunch", cat: "Breakfast", serving: "1 cup (30g)", kcal: 114 },
+  { id: "bf19", name: "Frosted Flakes", cat: "Breakfast", serving: "1 cup (30g)", kcal: 113 },
+  { id: "bf20", name: "Weetabix", cat: "Breakfast", serving: "2 biscuits", kcal: 134 },
+  { id: "bf21", name: "Rice Krispies", cat: "Breakfast", serving: "1 cup (30g)", kcal: 113 },
+  { id: "bf22", name: "Just Right", cat: "Breakfast", serving: "1 cup (40g)", kcal: 150 },
+  { id: "bf23", name: "Special K", cat: "Breakfast", serving: "1 cup (30g)", kcal: 113 },
+  { id: "bf24", name: "Nutri-Grain", cat: "Breakfast", serving: "1 cup (30g)", kcal: 112 },
+  { id: "bf25", name: "Milo Cereal", cat: "Breakfast", serving: "1 cup (30g)", kcal: 118 },
   // Common / general
   { id: "c1", name: "White Rice", cat: "Common", serving: "1 cup cooked", kcal: 205 },
   { id: "c2", name: "Grilled Chicken Breast", cat: "Common", serving: "100g", kcal: 165 },
@@ -397,10 +424,16 @@ export default function ChitTrack() {
       <style>{CSS_BASE}</style>
       <header style={S.header}>
         <div style={S.headerTicket}>
-          <span style={S.headerBrand}>ChitTrack</span>
-          <span style={S.headerSub}>your daily food chit</span>
+          <div style={S.headerStamp}>
+            <Utensils size={16} color="#fff" strokeWidth={2.2} />
+          </div>
+          <div style={S.headerBrandWrap}>
+            <span style={S.headerBrand}>ChitTrack</span>
+            <span style={S.headerSub}>your daily food chit</span>
+          </div>
         </div>
         <SyncBadge status={syncStatus} authUser={authUser} />
+        <div style={S.headerPerf} />
       </header>
 
       <main style={S.main}>
@@ -463,7 +496,7 @@ function SyncBadge({ status, authUser }) {
 
 function TabBtn({ icon: Icon, label, active, onClick }) {
   return (
-    <button onClick={onClick} style={{ ...S.tabBtn, color: active ? C.jade : C.muted }}>
+    <button onClick={onClick} style={{ ...S.tabBtn, ...(active ? S.tabBtnActive : {}), color: active ? C.jade : C.muted }}>
       <Icon size={20} strokeWidth={active ? 2.4 : 1.8} />
       <span style={{ fontSize: 11, marginTop: 2, fontWeight: active ? 700 : 500 }}>{label}</span>
     </button>
@@ -495,9 +528,15 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
       <div style={S.ringCard}>
         <div style={S.ringWrap}>
           <svg width="140" height="140" viewBox="0 0 140 140">
-            <circle cx="70" cy="70" r="60" fill="none" stroke={C.line} strokeWidth="12" />
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor={C.jade} />
+                <stop offset="100%" stopColor={C.jadeDark} />
+              </linearGradient>
+            </defs>
+            <circle cx="70" cy="70" r="60" fill="none" stroke={C.lineSoft} strokeWidth="12" />
             <circle
-              cx="70" cy="70" r="60" fill="none" stroke={C.jade} strokeWidth="12"
+              cx="70" cy="70" r="60" fill="none" stroke="url(#ringGrad)" strokeWidth="12"
               strokeDasharray={`${2 * Math.PI * 60}`}
               strokeDashoffset={`${2 * Math.PI * 60 * (1 - pct / 100)}`}
               strokeLinecap="round" transform="rotate(-90 70 70)"
@@ -523,7 +562,7 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
 
       {latestBody && (
         <div style={S.miniCard}>
-          <Ruler size={16} color={C.jade} />
+          <div style={S.miniCardIcon}><Ruler size={15} color={C.jade} /></div>
           <span style={{ fontSize: 13, color: C.ink }}>
             Last logged: {latestBody.weight}kg
             {latestBody.bodyFat ? ` · ${latestBody.bodyFat}% BF` : ""}
@@ -535,7 +574,7 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
 
       <SectionLabel>Today's chits</SectionLabel>
       {todayFood.length === 0 && todayEx.length === 0 && (
-        <EmptyHint text="Nothing logged yet today. Add a meal or a workout to get started." />
+        <EmptyHint icon={Utensils} text="Nothing logged yet today. Add a meal or a workout to get started." />
       )}
       {todayFood.map((f) => <Chit key={f.id} title={f.name} sub={`${f.meal} · x${f.qty}`} value={`${f.kcal * f.qty} kcal`} icon={Utensils} />)}
       {todayEx.map((e) => <Chit key={e.id} title={e.name} sub={`${e.duration} min`} value={`-${e.kcal} kcal`} icon={Dumbbell} accent={C.turmeric} />)}
@@ -559,7 +598,7 @@ function StepsCard({ steps, source, goal, date, setStepLogs, gfitConnected }) {
 
   return (
     <div style={S.miniCard}>
-      <Footprints size={16} color={C.jade} style={{ flexShrink: 0 }} />
+      <div style={S.miniCardIcon}><Footprints size={15} color={C.jade} /></div>
       {!editing ? (
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
           <div>
@@ -595,11 +634,21 @@ function StatRow({ label, value, accent }) {
 }
 
 function SectionLabel({ children }) {
-  return <div style={S.sectionLabel}>{children}</div>;
+  return (
+    <div style={S.sectionLabel}>
+      <span style={S.sectionDot} />
+      {children}
+    </div>
+  );
 }
 
-function EmptyHint({ text }) {
-  return <div style={S.emptyHint}>{text}</div>;
+function EmptyHint({ text, icon: Icon }) {
+  return (
+    <div style={S.emptyHint}>
+      {Icon && <Icon size={22} color={C.line} strokeWidth={1.6} />}
+      <span>{text}</span>
+    </div>
+  );
 }
 
 function Chit({ title, sub, value, icon: Icon, accent, onDelete }) {
@@ -607,7 +656,9 @@ function Chit({ title, sub, value, icon: Icon, accent, onDelete }) {
     <div style={S.chit}>
       <div style={S.chitPerf} />
       <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
-        <Icon size={16} color={accent || C.jade} />
+        <div style={{ ...S.miniCardIcon, background: accent ? C.turmericTint : C.jadeTint, boxShadow: "none" }}>
+          <Icon size={15} color={accent || C.jade} />
+        </div>
         <div style={{ minWidth: 0 }}>
           <div style={{ fontSize: 14, fontWeight: 600, color: C.ink, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{title}</div>
           <div style={{ fontSize: 11, color: C.muted }}>{sub}</div>
@@ -744,7 +795,7 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
           </div>
         );
       })}
-      {dayEntries.length === 0 && <EmptyHint text="No food logged for this day." />}
+      {dayEntries.length === 0 && <EmptyHint icon={Utensils} text="No food logged for this day." />}
     </div>
   );
 }
@@ -853,7 +904,7 @@ function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight }) {
       </div>
 
       <SectionLabel>Logged workouts</SectionLabel>
-      {dayEntries.length === 0 && <EmptyHint text="No exercise logged for this day." />}
+      {dayEntries.length === 0 && <EmptyHint icon={Dumbbell} text="No exercise logged for this day." />}
       {dayEntries.map((e) => (
         <Chit key={e.id} title={e.name} sub={`${e.duration} min`} value={`-${e.kcal} kcal`} icon={Dumbbell} accent={C.turmeric} onDelete={() => removeEntry(e.id)} />
       ))}
@@ -908,7 +959,7 @@ function BodyTab({ bodyLogs, setBodyLogs }) {
       </div>
 
       <SectionLabel>Recent entries</SectionLabel>
-      {history.length === 0 && <EmptyHint text="No body measurements yet." />}
+      {history.length === 0 && <EmptyHint icon={Ruler} text="No body measurements yet." />}
       {history.map((b) => (
         <Chit
           key={b.date}
@@ -1003,7 +1054,7 @@ function ProgressTab({ bodyLogs, stepLogs }) {
 
       {data.length >= 2 && (
         <div style={S.miniCard}>
-          <TrendingUp size={16} color={C.jade} />
+          <div style={S.miniCardIcon}><TrendingUp size={15} color={C.jade} /></div>
           <span style={{ fontSize: 13, color: C.ink }}>
             {data[0].value} → {data[data.length - 1].value} {activeMetric.unit}
             {" "}({(data[data.length - 1].value - data[0].value >= 0 ? "+" : "")}{(data[data.length - 1].value - data[0].value).toFixed(1)} {activeMetric.unit} over this period)
