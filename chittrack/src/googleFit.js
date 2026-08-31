@@ -103,7 +103,11 @@ export async function fetchDailySteps(accessToken, startDate, endDate) {
   const data = await res.json();
   const results = [];
   for (const bucket of data.bucket || []) {
-    const dateStr = new Date(Number(bucket.startTimeMillis)).toISOString().slice(0, 10);
+    // Use local calendar date, not toISOString (UTC) — the bucket boundary
+    // is local midnight, so converting to UTC shifts the date backwards
+    // for any timezone ahead of UTC (e.g. always one day early for SGT).
+    const bd = new Date(Number(bucket.startTimeMillis));
+    const dateStr = `${bd.getFullYear()}-${String(bd.getMonth() + 1).padStart(2, "0")}-${String(bd.getDate()).padStart(2, "0")}`;
     let steps = 0;
     for (const dataset of bucket.dataset || []) {
       for (const point of dataset.point || []) {
