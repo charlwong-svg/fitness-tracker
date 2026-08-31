@@ -342,24 +342,6 @@ export default function ChitTrack() {
   };
   const handleWantsSignIn = () => { setGuestMode(false); storeSet("guestMode", false); };
 
-  if (authUser === undefined) {
-    return (
-      <div style={{ ...S.app, alignItems: "center", justifyContent: "center", display: "flex", minHeight: "100vh" }}>
-        <RefreshCw className="spin" size={26} color={C.jade} />
-        <style>{CSS_BASE}</style>
-      </div>
-    );
-  }
-
-  if (!authUser && !guestMode) {
-    return (
-      <>
-        <style>{CSS_BASE}</style>
-        <AuthScreen onSkip={handleSkip} />
-      </>
-    );
-  }
-
   const latestWeight = useMemo(() => {
     const sorted = [...bodyLogs].sort((a, b) => b.date.localeCompare(a.date));
     return sorted.length ? Number(sorted[0].weight) : null;
@@ -382,6 +364,24 @@ export default function ChitTrack() {
     if (profile.goal === "gain") return tdee + dailyAdjust;
     return tdee;
   }, [tdee, profile]);
+
+  if (authUser === undefined) {
+    return (
+      <div style={{ ...S.app, alignItems: "center", justifyContent: "center", display: "flex", minHeight: "100vh" }}>
+        <RefreshCw className="spin" size={26} color={C.jade} />
+        <style>{CSS_BASE}</style>
+      </div>
+    );
+  }
+
+  if (!authUser && !guestMode) {
+    return (
+      <>
+        <style>{CSS_BASE}</style>
+        <AuthScreen onSkip={handleSkip} />
+      </>
+    );
+  }
 
   const shared = {
     profile, setProfile, bodyLogs, setBodyLogs, foodLogs, setFoodLogs,
