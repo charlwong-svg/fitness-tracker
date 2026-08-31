@@ -1,21 +1,17 @@
-// Fill this in with your own Firebase project's config.
-//
-// Where to find it:
-// Firebase console (console.firebase.google.com) → your project →
-// ⚙️ Project settings → General tab → "Your apps" → click the web app
-// (</> icon) → the `firebaseConfig` object is shown there. If you haven't
-// created a web app yet, click "Add app" → Web, give it any nickname,
-// and it'll generate this for you.
-//
-// This data is not secret — it's fine for it to end up in your deployed
-// site's JS bundle. Access is controlled by Firestore security rules
-// (see firestore.rules in this project), not by hiding this config.
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD-opdvUgAdZvEvPo18dumPpu0mqiXu6f4",
+  authDomain: "char-fitness-tracker.firebaseapp.com",
+  projectId: "char-fitness-tracker",
+  storageBucket: "char-fitness-tracker.firebasestorage.app",
+  messagingSenderId: "60723348917",
+  appId: "1:60723348917:web:b3f7014d6d7cc5054945fc"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
