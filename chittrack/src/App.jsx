@@ -16,6 +16,103 @@ import {
 } from "./googleFit.js";
 
 /* ---------------------------------------------------------------------- */
+/* Style tokens                                                            */
+/* ---------------------------------------------------------------------- */
+
+const C_JADE = "#1F6F5C";
+const C = {
+  bg: "#F2F5F1",
+  surface: "#FFFFFF",
+  ink: "#1B2B27",
+  muted: "#6B7D77",
+  jade: C_JADE,
+  jadeDark: "#175444",
+  jadeTint: "#E4EFEB",
+  turmeric: "#C97F1E",
+  chili: "#C2482B",
+  line: "#DEE5E0",
+};
+const F = {
+  display: "'Fraunces', Georgia, serif",
+  body: "'Inter', system-ui, -apple-system, sans-serif",
+  mono: "'JetBrains Mono', ui-monospace, Menlo, monospace",
+};
+
+const S = {
+  app: { fontFamily: F.body, background: C.bg, minHeight: "100vh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
+  header: { padding: "18px 18px 10px", background: C.bg },
+  headerTicket: { display: "flex", alignItems: "baseline", gap: 8 },
+  headerBrand: { fontFamily: F.display, fontSize: 24, fontWeight: 700, letterSpacing: -0.5, color: C.ink },
+  headerSub: { fontSize: 12, color: C.muted, fontStyle: "italic" },
+  syncBadge: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, marginTop: 4 },
+  main: { flex: 1, padding: "4px 16px 90px", overflowY: "auto" },
+  screen: { display: "flex", flexDirection: "column", gap: 10 },
+  h2: { fontFamily: F.display, fontSize: 19, fontWeight: 700, margin: "6px 0 2px", color: C.ink },
+  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%" },
+  tabBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", padding: "4px 8px", cursor: "pointer" },
+
+  card: { background: C.surface, borderRadius: 14, padding: 14, border: `1px solid ${C.line}`, display: "flex", flexDirection: "column", gap: 6 },
+  miniCard: { background: C.jadeTint, borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8 },
+  stepBarTrack: { height: 5, width: 140, background: "#FFFFFF", borderRadius: 3, marginTop: 5, overflow: "hidden" },
+  stepBarFill: { height: "100%", background: C.jade, borderRadius: 3, transition: "width 0.3s ease" },
+
+  ringCard: { background: C.surface, borderRadius: 16, padding: 16, border: `1px solid ${C.line}`, display: "flex", alignItems: "center", gap: 16 },
+  ringWrap: { position: "relative", flexShrink: 0 },
+  ringCenter: { position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" },
+  ringStats: { flex: 1, display: "flex", flexDirection: "column", gap: 6 },
+  statRow: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+
+  sectionLabel: { fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 0.6, marginTop: 8 },
+  emptyHint: { fontSize: 13, color: C.muted, background: C.surface, border: `1px dashed ${C.line}`, borderRadius: 12, padding: "16px 14px", textAlign: "center" },
+
+  chit: { position: "relative", background: C.surface, border: `1px solid ${C.line}`, borderLeft: `3px dashed ${C.line}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 },
+  chitPerf: { display: "none" },
+
+  dateNav: { display: "flex", alignItems: "center", justifyContent: "center", gap: 14, padding: "4px 0" },
+  iconBtn: { background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: 4 },
+
+  mealTabs: { display: "flex", gap: 6, marginBottom: 4, flexWrap: "wrap" },
+  mealTab: { fontSize: 12, fontWeight: 600, color: C.muted, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 12px", cursor: "pointer" },
+  mealTabActive: { background: C.jade, color: "#fff", borderColor: C.jade },
+
+  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px" },
+  searchInput: { border: "none", background: "none", outline: "none", fontSize: 14, flex: 1, color: C.ink, fontFamily: F.body },
+
+  qtyRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 2px" },
+  stepper: { display: "flex", alignItems: "center", gap: 8, background: C.bg, borderRadius: 20, padding: "3px 6px" },
+  stepperBtn: { width: 24, height: 24, borderRadius: "50%", border: "none", background: C.surface, color: C.ink, fontSize: 15, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 1px 0 ${C.line}` },
+
+  resultsList: { display: "flex", flexDirection: "column", gap: 4, maxHeight: 260, overflowY: "auto" },
+  resultRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", textAlign: "left", width: "100%" },
+
+  linkBtn: { alignSelf: "flex-start", background: "none", border: "none", color: C.jade, fontSize: 12.5, fontWeight: 700, cursor: "pointer", padding: "4px 2px" },
+  textInput: { border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", fontSize: 14, outline: "none", color: C.ink, fontFamily: F.body, width: "100%", boxSizing: "border-box" },
+  fieldLabel: { fontSize: 11.5, fontWeight: 700, color: C.muted, marginTop: 4 },
+  select: { border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
+
+  primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.jade, color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1 },
+  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.turmeric, color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1 },
+  ghostBtn: { background: "none", border: `1px solid ${C.line}`, color: C.muted, borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
+
+  totalBar: { display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "2px 4px" },
+  pillRow: { display: "flex", gap: 6, flexWrap: "wrap" },
+  pill: { fontSize: 12.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "6px 13px", cursor: "pointer" },
+  pillSmall: { fontSize: 11.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 11px", cursor: "pointer" },
+
+  footNote: { fontSize: 11.5, color: C.muted, lineHeight: 1.5, padding: "0 4px 10px" },
+};
+
+const CSS_BASE = `
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+* { box-sizing: border-box; }
+input:focus, select:focus { border-color: ${C.jade} !important; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+button { font-family: inherit; }
+`;
+
+/* ---------------------------------------------------------------------- */
 /* Static data                                                             */
 /* ---------------------------------------------------------------------- */
 
@@ -1066,99 +1163,3 @@ function ProfileTab({ profile, setProfile, tdee, targetCalories, latestWeight, a
   );
 }
 
-/* ---------------------------------------------------------------------- */
-/* Style tokens                                                            */
-/* ---------------------------------------------------------------------- */
-
-const C_JADE = "#1F6F5C";
-const C = {
-  bg: "#F2F5F1",
-  surface: "#FFFFFF",
-  ink: "#1B2B27",
-  muted: "#6B7D77",
-  jade: C_JADE,
-  jadeDark: "#175444",
-  jadeTint: "#E4EFEB",
-  turmeric: "#C97F1E",
-  chili: "#C2482B",
-  line: "#DEE5E0",
-};
-const F = {
-  display: "'Fraunces', Georgia, serif",
-  body: "'Inter', system-ui, -apple-system, sans-serif",
-  mono: "'JetBrains Mono', ui-monospace, Menlo, monospace",
-};
-
-const S = {
-  app: { fontFamily: F.body, background: C.bg, minHeight: "100vh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
-  header: { padding: "18px 18px 10px", background: C.bg },
-  headerTicket: { display: "flex", alignItems: "baseline", gap: 8 },
-  headerBrand: { fontFamily: F.display, fontSize: 24, fontWeight: 700, letterSpacing: -0.5, color: C.ink },
-  headerSub: { fontSize: 12, color: C.muted, fontStyle: "italic" },
-  syncBadge: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, marginTop: 4 },
-  main: { flex: 1, padding: "4px 16px 90px", overflowY: "auto" },
-  screen: { display: "flex", flexDirection: "column", gap: 10 },
-  h2: { fontFamily: F.display, fontSize: 19, fontWeight: 700, margin: "6px 0 2px", color: C.ink },
-  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%" },
-  tabBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", padding: "4px 8px", cursor: "pointer" },
-
-  card: { background: C.surface, borderRadius: 14, padding: 14, border: `1px solid ${C.line}`, display: "flex", flexDirection: "column", gap: 6 },
-  miniCard: { background: C.jadeTint, borderRadius: 12, padding: "10px 12px", display: "flex", alignItems: "center", gap: 8 },
-  stepBarTrack: { height: 5, width: 140, background: "#FFFFFF", borderRadius: 3, marginTop: 5, overflow: "hidden" },
-  stepBarFill: { height: "100%", background: C.jade, borderRadius: 3, transition: "width 0.3s ease" },
-
-  ringCard: { background: C.surface, borderRadius: 16, padding: 16, border: `1px solid ${C.line}`, display: "flex", alignItems: "center", gap: 16 },
-  ringWrap: { position: "relative", flexShrink: 0 },
-  ringCenter: { position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" },
-  ringStats: { flex: 1, display: "flex", flexDirection: "column", gap: 6 },
-  statRow: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-
-  sectionLabel: { fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 0.6, marginTop: 8 },
-  emptyHint: { fontSize: 13, color: C.muted, background: C.surface, border: `1px dashed ${C.line}`, borderRadius: 12, padding: "16px 14px", textAlign: "center" },
-
-  chit: { position: "relative", background: C.surface, border: `1px solid ${C.line}`, borderLeft: `3px dashed ${C.line}`, borderRadius: 10, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 },
-  chitPerf: { display: "none" },
-
-  dateNav: { display: "flex", alignItems: "center", justifyContent: "center", gap: 14, padding: "4px 0" },
-  iconBtn: { background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: 4 },
-
-  mealTabs: { display: "flex", gap: 6, marginBottom: 4, flexWrap: "wrap" },
-  mealTab: { fontSize: 12, fontWeight: 600, color: C.muted, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 12px", cursor: "pointer" },
-  mealTabActive: { background: C.jade, color: "#fff", borderColor: C.jade },
-
-  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px" },
-  searchInput: { border: "none", background: "none", outline: "none", fontSize: 14, flex: 1, color: C.ink, fontFamily: F.body },
-
-  qtyRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 2px" },
-  stepper: { display: "flex", alignItems: "center", gap: 8, background: C.bg, borderRadius: 20, padding: "3px 6px" },
-  stepperBtn: { width: 24, height: 24, borderRadius: "50%", border: "none", background: C.surface, color: C.ink, fontSize: 15, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 1px 0 ${C.line}` },
-
-  resultsList: { display: "flex", flexDirection: "column", gap: 4, maxHeight: 260, overflowY: "auto" },
-  resultRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", textAlign: "left", width: "100%" },
-
-  linkBtn: { alignSelf: "flex-start", background: "none", border: "none", color: C.jade, fontSize: 12.5, fontWeight: 700, cursor: "pointer", padding: "4px 2px" },
-  textInput: { border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", fontSize: 14, outline: "none", color: C.ink, fontFamily: F.body, width: "100%", boxSizing: "border-box" },
-  fieldLabel: { fontSize: 11.5, fontWeight: 700, color: C.muted, marginTop: 4 },
-  select: { border: `1px solid ${C.line}`, borderRadius: 10, padding: "9px 12px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
-
-  primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.jade, color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1 },
-  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.turmeric, color: "#fff", border: "none", borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1 },
-  ghostBtn: { background: "none", border: `1px solid ${C.line}`, color: C.muted, borderRadius: 10, padding: "10px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
-
-  totalBar: { display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "2px 4px" },
-  pillRow: { display: "flex", gap: 6, flexWrap: "wrap" },
-  pill: { fontSize: 12.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "6px 13px", cursor: "pointer" },
-  pillSmall: { fontSize: 11.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 11px", cursor: "pointer" },
-
-  footNote: { fontSize: 11.5, color: C.muted, lineHeight: 1.5, padding: "0 4px 10px" },
-};
-
-const CSS_BASE = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
-* { box-sizing: border-box; }
-input:focus, select:focus { border-color: ${C.jade} !important; }
-::-webkit-scrollbar { width: 4px; height: 4px; }
-.spin { animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-button { font-family: inherit; }
-`;
