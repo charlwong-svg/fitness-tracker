@@ -14,4 +14,4 @@
 //    http://localhost:5173 for local testing. No redirect URI is needed.
 // 5. Copy the generated Client ID below.
 
-export const googleFitClientId = 573489954968-cei217i40eq3qo9akhdq0qqr2krogobg.apps.googleusercontent.com;
+export const googleFitClientId = "573489954968-cei217i40eq3qo9akhdq0qqr2krogobg.apps.googleusercontent.com";
