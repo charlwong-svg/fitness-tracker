@@ -57,7 +57,7 @@ export default function AuthScreen({ onSkip }) {
     <div style={styles.wrap}>
       <div style={styles.card}>
         <div style={styles.brandRow}>
-          <span style={styles.brand}>ChitTrack</span>
+          <span style={styles.brand}>My Fitness Tracker</span>
           <span style={styles.sub}>your daily food chit</span>
         </div>
 
