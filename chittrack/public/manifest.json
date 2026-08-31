@@ -1,6 +1,6 @@
 {
-  "name": "ChitTrack",
-  "short_name": "ChitTrack",
+  "name": "My Fitness Tracker",
+  "short_name": "My Fitness",
   "description": "Track food, exercise, steps and body stats with a daily calorie target.",
   "start_url": "/",
   "scope": "/",
