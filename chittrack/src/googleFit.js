@@ -47,7 +47,8 @@ export function clearStoredToken() {
 
 // Requests an access token. `interactive: false` tries a silent refresh
 // (works if the user already granted access and is signed into Google in
-// this browser); `interactive: true` shows the consent popup.
+// this browser, via a hidden background request to Google — no UI shown);
+// `interactive: true` shows the consent popup.
 export async function requestGoogleFitToken({ interactive } = { interactive: true }) {
   await waitForGis();
   return new Promise((resolve, reject) => {
@@ -63,8 +64,25 @@ export async function requestGoogleFitToken({ interactive } = { interactive: tru
       resolve(saveToken(resp));
     };
     tokenClient.error_callback = (err) => reject(err);
-    tokenClient.requestAccessToken({ prompt: interactive ? "consent" : "" });
+    // "none" explicitly guarantees no popup/UI for a silent refresh
+    // attempt (an empty string leaves the choice up to Google, which is
+    // less predictable); "consent" always shows the picker/approval screen.
+    tokenClient.requestAccessToken({ prompt: interactive ? "consent" : "none" });
   });
+}
+
+// Silent refresh can fail for transient reasons (a slow network blip while
+// the hidden background request runs, a brief hiccup in the browser's
+// session check) as well as for a real reason (session actually gone). We
+// retry once before giving up, so a one-off glitch doesn't force a manual
+// reconnect.
+export async function requestGoogleFitTokenSilentWithRetry() {
+  try {
+    return await requestGoogleFitToken({ interactive: false });
+  } catch (e) {
+    await new Promise((r) => setTimeout(r, 1500));
+    return await requestGoogleFitToken({ interactive: false });
+  }
 }
 
 export function revokeGoogleFitToken() {
