@@ -19,81 +19,80 @@ import {
 /* Style tokens                                                            */
 /* ---------------------------------------------------------------------- */
 
-const C_JADE = "#0E4438";
+const C_JADE = "#0EA672";
 const C = {
-  bg: "#E9EAE2",
-  bgAlt: "#DFE1D5",
+  bg: "#F6F8F7",
+  bgAlt: "#EEF2EF",
   surface: "#FFFFFF",
-  ink: "#151F1B",
-  muted: "#666B5F",
+  ink: "#182420",
+  muted: "#72796E",
   jade: C_JADE,
-  jadeDark: "#082821",
-  jadeTint: "#E1E7E0",
-  turmeric: "#A17A2E",
-  turmericTint: "#F0E7D3",
-  chili: "#8C3B2A",
-  line: "#D8DBCC",
-  lineSoft: "#E4E6DA",
-  gold: "#B79352",
+  jadeDark: "#078054",
+  jadeTint: "#E3F7EE",
+  turmeric: "#F0913D",
+  turmericTint: "#FDEEE0",
+  chili: "#E14B3A",
+  line: "#E7EAE4",
+  lineSoft: "#F0F2EE",
 };
 const F = {
-  display: "'Fraunces', Georgia, serif",
+  display: "'Manrope', 'Inter', system-ui, -apple-system, sans-serif",
   body: "'Inter', system-ui, -apple-system, sans-serif",
-  mono: "'JetBrains Mono', ui-monospace, Menlo, monospace",
+  mono: "'Manrope', 'Inter', system-ui, -apple-system, sans-serif",
 };
 const SHADOW = {
-  card: "0 1px 2px rgba(8,40,33,0.06), 0 6px 16px -4px rgba(8,40,33,0.12)",
-  cardSm: "0 1px 2px rgba(8,40,33,0.06), 0 3px 8px -2px rgba(8,40,33,0.09)",
-  chit: "0 1px 1px rgba(21,31,27,0.05), 0 4px 10px -3px rgba(21,31,27,0.12)",
-  btn: "0 2px 6px -1px rgba(8,40,33,0.32)",
-  btnTurmeric: "0 2px 6px -1px rgba(161,122,46,0.35)",
-  ring: "0 4px 20px -6px rgba(8,40,33,0.30)",
+  card: "0 1px 2px rgba(24,36,32,0.04), 0 4px 14px -6px rgba(24,36,32,0.08)",
+  cardSm: "0 1px 2px rgba(24,36,32,0.04), 0 2px 8px -4px rgba(24,36,32,0.06)",
+  chit: "0 1px 2px rgba(24,36,32,0.04), 0 2px 8px -4px rgba(24,36,32,0.06)",
+  btn: "0 4px 12px -3px rgba(14,166,114,0.40)",
+  btnTurmeric: "0 4px 12px -3px rgba(240,145,61,0.40)",
+  ring: "0 10px 30px -10px rgba(14,166,114,0.35)",
 };
 
 const S = {
   app: { fontFamily: F.body, background: C.bg, minHeight: "100vh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
-  header: { padding: "20px 18px 14px", background: `linear-gradient(180deg, ${C.bgAlt} 0%, ${C.bg} 100%)`, position: "relative" },
+  header: { padding: "20px 18px 14px", background: C.bg, position: "relative" },
   headerTicket: { display: "flex", alignItems: "center", gap: 10 },
-  headerStamp: { width: 34, height: 34, borderRadius: "50%", background: C.jade, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: SHADOW.btn, border: `1.5px solid ${C.gold}` },
+  headerStamp: { width: 36, height: 36, borderRadius: "50%", background: C.jade, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: SHADOW.btn },
   headerBrandWrap: { display: "flex", flexDirection: "column" },
-  headerBrand: { fontFamily: F.display, fontSize: 23, fontWeight: 700, letterSpacing: -0.4, color: C.ink, lineHeight: 1.1 },
-  headerSub: { fontSize: 11.5, color: C.muted, fontStyle: "italic" },
-  syncBadge: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, marginTop: 6, marginLeft: 44 },
-  headerPerf: { position: "absolute", left: 0, right: 0, bottom: -1, height: 1, backgroundImage: `linear-gradient(90deg, ${C.line} 50%, transparent 0%)`, backgroundSize: "10px 1px", backgroundRepeat: "repeat-x" },
+  headerBrand: { fontFamily: F.display, fontSize: 21, fontWeight: 800, letterSpacing: -0.4, color: C.ink, lineHeight: 1.15 },
+  headerSub: { fontSize: 12, color: C.muted, fontWeight: 500 },
+  syncBadge: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600, marginTop: 6, marginLeft: 46 },
+  headerPerf: { display: "none" },
   main: { flex: 1, padding: "6px 16px 90px", overflowY: "auto" },
   screen: { display: "flex", flexDirection: "column", gap: 10 },
-  h2: { fontFamily: F.display, fontSize: 20, fontWeight: 700, margin: "8px 0 2px", color: C.ink, letterSpacing: -0.3 },
-  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%", boxShadow: "0 -4px 16px rgba(15,68,56,0.05)" },
+  h2: { fontFamily: F.display, fontSize: 21, fontWeight: 800, margin: "8px 0 2px", color: C.ink, letterSpacing: -0.3 },
+  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%", boxShadow: "0 -2px 12px rgba(24,36,32,0.04)" },
   tabBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", padding: "6px 14px", cursor: "pointer", borderRadius: 14, transition: "background 0.15s ease" },
   tabBtnActive: { background: C.jadeTint },
 
-  card: { background: C.surface, borderRadius: 16, padding: 15, border: `1px solid ${C.lineSoft}`, boxShadow: SHADOW.cardSm, display: "flex", flexDirection: "column", gap: 6 },
-  miniCard: { background: C.jadeTint, borderRadius: 14, padding: "11px 13px", display: "flex", alignItems: "center", gap: 10 },
-  miniCardIcon: { width: 30, height: 30, borderRadius: "50%", background: C.surface, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  stepBarTrack: { height: 5, width: 140, background: "#FFFFFF", borderRadius: 3, marginTop: 5, overflow: "hidden" },
-  stepBarFill: { height: "100%", background: `linear-gradient(90deg, ${C.jade}, ${C.jadeDark})`, borderRadius: 3, transition: "width 0.3s ease" },
+  card: { background: C.surface, borderRadius: 18, padding: 16, border: "none", boxShadow: SHADOW.cardSm, display: "flex", flexDirection: "column", gap: 6 },
+  miniCard: { background: C.jadeTint, borderRadius: 16, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 },
+  miniCardIcon: { width: 32, height: 32, borderRadius: "50%", background: C.surface, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  stepBarTrack: { height: 6, width: 140, background: "#FFFFFF", borderRadius: 3, marginTop: 5, overflow: "hidden" },
+  stepBarFill: { height: "100%", background: C.jade, borderRadius: 3, transition: "width 0.3s ease" },
 
-  ringCard: { background: `linear-gradient(160deg, ${C.surface} 0%, ${C.jadeTint} 130%)`, borderRadius: 20, padding: 18, border: `1px solid ${C.lineSoft}`, boxShadow: SHADOW.ring, display: "flex", alignItems: "center", gap: 16 },
+  ringCard: { background: C.surface, borderRadius: 22, padding: 20, border: "none", boxShadow: SHADOW.card, display: "flex", alignItems: "center", gap: 16 },
   ringWrap: { position: "relative", flexShrink: 0 },
   ringCenter: { position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" },
-  ringStats: { flex: 1, display: "flex", flexDirection: "column", gap: 7 },
+  ringStats: { flex: 1, display: "flex", flexDirection: "column", gap: 8 },
   statRow: { display: "flex", justifyContent: "space-between", alignItems: "center" },
 
-  sectionLabel: { display: "flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 700, color: C.ink, marginTop: 10, marginBottom: 2 },
-  sectionDot: { width: 6, height: 6, borderRadius: "50%", background: C.turmeric, flexShrink: 0 },
-  emptyHint: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, fontSize: 13, color: C.muted, background: C.surface, border: `1.5px dashed ${C.line}`, borderRadius: 14, padding: "22px 18px", textAlign: "center" },
+  sectionLabel: { display: "flex", alignItems: "center", gap: 7, fontSize: 13.5, fontWeight: 800, color: C.ink, marginTop: 10, marginBottom: 2 },
+  sectionDot: { width: 7, height: 7, borderRadius: "50%", background: C.jade, flexShrink: 0 },
+  emptyHint: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, fontSize: 13, color: C.muted, background: C.surface, border: "none", boxShadow: SHADOW.cardSm, borderRadius: 16, padding: "24px 18px", textAlign: "center" },
 
-  chit: { position: "relative", background: C.surface, borderRadius: 12, padding: "12px 13px 11px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, boxShadow: SHADOW.chit, overflow: "hidden" },
-  chitPerf: { position: "absolute", top: 0, left: 0, right: 0, height: 4, backgroundImage: `radial-gradient(circle at 6px 0px, ${C.bg} 3px, transparent 3.5px)`, backgroundSize: "12px 4px", backgroundRepeat: "repeat-x" },
+  chit: { position: "relative", background: C.surface, borderRadius: 16, padding: "13px 14px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, boxShadow: SHADOW.chit, overflow: "hidden" },
+  chitPerf: { display: "none" },
 
   dateNav: { display: "flex", alignItems: "center", justifyContent: "center", gap: 14, padding: "4px 0" },
   iconBtn: { background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", padding: 4 },
 
   mealTabs: { display: "flex", gap: 6, marginBottom: 4, flexWrap: "wrap" },
-  mealTab: { fontSize: 12, fontWeight: 600, color: C.muted, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 12px", cursor: "pointer", transition: "all 0.15s ease" },
-  mealTabActive: { background: C.jade, color: "#fff", borderColor: C.jade, boxShadow: SHADOW.btn },
+  mealTab: { fontSize: 12, fontWeight: 600, color: C.muted, background: C.bg, border: "none", borderRadius: 20, padding: "6px 13px", cursor: "pointer", transition: "all 0.15s ease" },
+  mealTabActive: { background: C.jade, color: "#fff", boxShadow: SHADOW.btn },
 
-  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: C.bg, border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px" },
+  searchWrap: { display: "flex", alignItems: "center", gap: 8, background: C.bg, border: "none", borderRadius: 14, padding: "11px 14px" },
   searchInput: { border: "none", background: "none", outline: "none", fontSize: 14, flex: 1, color: C.ink, fontFamily: F.body },
 
   qtyRow: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 2px" },
@@ -101,27 +100,27 @@ const S = {
   stepperBtn: { width: 26, height: 26, borderRadius: "50%", border: "none", background: C.surface, color: C.jade, fontSize: 16, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: SHADOW.cardSm },
 
   resultsList: { display: "flex", flexDirection: "column", gap: 5, maxHeight: 260, overflowY: "auto" },
-  resultRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", cursor: "pointer", textAlign: "left", width: "100%", transition: "border-color 0.15s ease" },
+  resultRow: { display: "flex", justifyContent: "space-between", alignItems: "center", background: C.bg, border: "none", borderRadius: 14, padding: "11px 14px", cursor: "pointer", textAlign: "left", width: "100%", transition: "background 0.15s ease" },
 
   linkBtn: { alignSelf: "flex-start", background: "none", border: "none", color: C.jade, fontSize: 12.5, fontWeight: 700, cursor: "pointer", padding: "4px 2px" },
-  textInput: { border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", fontSize: 14, outline: "none", color: C.ink, fontFamily: F.body, width: "100%", boxSizing: "border-box", background: C.surface },
+  textInput: { border: `1.5px solid ${C.line}`, borderRadius: 14, padding: "11px 14px", fontSize: 14, outline: "none", color: C.ink, fontFamily: F.body, width: "100%", boxSizing: "border-box", background: C.surface },
   fieldLabel: { fontSize: 11.5, fontWeight: 700, color: C.muted, marginTop: 4 },
-  select: { border: `1px solid ${C.line}`, borderRadius: 12, padding: "10px 13px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
+  select: { border: `1.5px solid ${C.line}`, borderRadius: 14, padding: "11px 14px", fontSize: 13.5, outline: "none", color: C.ink, fontFamily: F.body, background: C.surface },
 
-  primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.jade}, ${C.jadeDark})`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btn },
-  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: `linear-gradient(180deg, ${C.turmeric}, #7C5C1F)`, color: "#fff", border: "none", borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btnTurmeric },
-  ghostBtn: { background: C.surface, border: `1px solid ${C.line}`, color: C.muted, borderRadius: 12, padding: "11px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
+  primaryBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.jade, color: "#fff", border: "none", borderRadius: 14, padding: "12px 14px", fontSize: 14, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btn },
+  primaryBtnTurmeric: { display: "flex", alignItems: "center", justifyContent: "center", gap: 6, background: C.turmeric, color: "#fff", border: "none", borderRadius: 14, padding: "12px 14px", fontSize: 14, fontWeight: 700, cursor: "pointer", flex: 1, boxShadow: SHADOW.btnTurmeric },
+  ghostBtn: { background: C.surface, border: `1.5px solid ${C.line}`, color: C.muted, borderRadius: 14, padding: "12px 14px", fontSize: 13.5, fontWeight: 600, cursor: "pointer" },
 
   totalBar: { display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "2px 4px" },
   pillRow: { display: "flex", gap: 6, flexWrap: "wrap" },
-  pill: { fontSize: 12.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "6px 13px", cursor: "pointer", transition: "all 0.15s ease" },
-  pillSmall: { fontSize: 11.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1px solid ${C.line}`, borderRadius: 20, padding: "5px 11px", cursor: "pointer", transition: "all 0.15s ease" },
+  pill: { fontSize: 12.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1.5px solid ${C.line}`, borderRadius: 20, padding: "6px 13px", cursor: "pointer", transition: "all 0.15s ease" },
+  pillSmall: { fontSize: 11.5, fontWeight: 600, color: C.ink, background: C.surface, border: `1.5px solid ${C.line}`, borderRadius: 20, padding: "5px 11px", cursor: "pointer", transition: "all 0.15s ease" },
 
   footNote: { fontSize: 11.5, color: C.muted, lineHeight: 1.5, padding: "0 4px 10px" },
 };
 
 const CSS_BASE = `
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap');
 * { box-sizing: border-box; }
 input:focus, select:focus { border-color: ${C.jade} !important; box-shadow: 0 0 0 3px ${C.jadeTint}; }
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -773,6 +772,7 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
   const [customKcal, setCustomKcal] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editQty, setEditQty] = useState(1);
+  const [editKcal, setEditKcal] = useState("");
 
   const allFoods = useMemo(() => [...FOOD_DB, ...customFoods], [customFoods]);
   const filtered = useMemo(() => {
@@ -799,9 +799,16 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
   };
 
   const removeEntry = (id) => setFoodLogs((prev) => prev.filter((f) => f.id !== id));
-  const startEdit = (f) => { setEditingId(f.id); setEditQty(f.qty); };
+  const startEdit = (f) => { setEditingId(f.id); setEditQty(f.qty); setEditKcal(String(f.kcal)); };
   const saveEdit = (id) => {
-    setFoodLogs((prev) => prev.map((f) => (f.id === id ? { ...f, qty: editQty } : f)));
+    const kcal = Number(editKcal);
+    const entry = foodLogs.find((f) => f.id === id);
+    setFoodLogs((prev) => prev.map((f) => (f.id === id ? { ...f, qty: editQty, kcal: kcal > 0 ? kcal : f.kcal } : f)));
+    // If this was a custom food, also fix the reusable definition so future
+    // searches/logs of it start from the corrected calorie value.
+    if (kcal > 0 && entry) {
+      setCustomFoods((prev) => prev.map((cf) => (cf.name === entry.name ? { ...cf, kcal } : cf)));
+    }
     setEditingId(null);
   };
 
@@ -883,14 +890,23 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
             <SectionLabel>{m}</SectionLabel>
             {entries.map((f) =>
               editingId === f.id ? (
-                <div key={f.id} style={S.chit}>
+                <div key={f.id} style={{ ...S.chit, flexDirection: "column", alignItems: "stretch", gap: 8 }}>
                   <div style={S.chitPerf} />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: C.ink, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</div>
-                    <div style={{ fontSize: 11, color: C.muted }}>{f.kcal} kcal per serving</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: C.ink }}>{f.name}</div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <input
+                        style={{ ...S.textInput, width: 70, padding: "6px 8px", textAlign: "right" }}
+                        type="number" value={editKcal} onChange={(e) => setEditKcal(e.target.value)}
+                      />
+                      <span style={{ fontSize: 11.5, color: C.muted }}>kcal / serving</span>
+                    </div>
+                    <QtyStepper qty={editQty} setQty={setEditQty} />
                   </div>
-                  <QtyStepper qty={editQty} setQty={setEditQty} />
-                  <button style={S.linkBtn} onClick={() => saveEdit(f.id)}>Save</button>
+                  <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                    <button style={S.linkBtn} onClick={() => setEditingId(null)}>Cancel</button>
+                    <button style={S.linkBtn} onClick={() => saveEdit(f.id)}>Save</button>
+                  </div>
                 </div>
               ) : (
                 <Chit
