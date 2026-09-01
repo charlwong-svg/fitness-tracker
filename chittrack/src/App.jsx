@@ -3,7 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import {
-  Home, Utensils, Dumbbell, Ruler, TrendingUp, User, Plus, Trash2,
+  Home, Utensils, Dumbbell, Ruler, TrendingUp, User, Plus, Trash2, Pencil,
   ChevronLeft, ChevronRight, Search, X, Cloud, CloudOff, RefreshCw, AlertCircle, LogOut,
   Footprints, Link2, Unlink, Smile,
 } from "lucide-react";
@@ -12,7 +12,7 @@ import { auth, firebaseEnabled } from "./firebase.js";
 import { useCloudSync } from "./useCloudSync.js";
 import AuthScreen from "./AuthScreen.jsx";
 import {
-  googleFitEnabled, getStoredToken, requestGoogleFitToken, revokeGoogleFitToken, fetchDailySteps,
+  googleFitEnabled, getStoredToken, requestGoogleFitToken, requestGoogleFitTokenSilentWithRetry, revokeGoogleFitToken, fetchDailySteps,
 } from "./googleFit.js";
 
 /* ---------------------------------------------------------------------- */
@@ -358,7 +358,11 @@ export default function ChitTrack() {
     setGfitStatus("syncing");
     try {
       let token = getStoredToken();
-      if (!token) token = await requestGoogleFitToken({ interactive });
+      if (!token) {
+        token = interactive
+          ? await requestGoogleFitToken({ interactive: true })
+          : await requestGoogleFitTokenSilentWithRetry();
+      }
       const end = new Date(); end.setHours(24, 0, 0, 0);
       const start = new Date(); start.setDate(start.getDate() - 30); start.setHours(0, 0, 0, 0);
       const fetched = await fetchDailySteps(token.accessToken, start, end);
@@ -418,23 +422,47 @@ export default function ChitTrack() {
     return sorted.length ? Number(sorted[0].weight) : null;
   }, [bodyLogs]);
 
-  const tdee = useMemo(() => {
-    const { age, gender, height, activity } = profile;
+  const bmr = useMemo(() => {
+    const { age, gender, height } = profile;
     if (!age || !height || !latestWeight) return null;
-    const bmr = gender === "male"
+    return gender === "male"
       ? 10 * latestWeight + 6.25 * height - 5 * age + 5
       : 10 * latestWeight + 6.25 * height - 5 * age - 161;
-    const factor = ACTIVITY_LEVELS.find((a) => a.id === activity)?.factor || 1.2;
-    return Math.round(bmr * factor);
   }, [profile, latestWeight]);
 
-  const targetCalories = useMemo(() => {
-    if (!tdee) return null;
+  const tdee = useMemo(() => {
+    if (!bmr) return null;
+    const factor = ACTIVITY_LEVELS.find((a) => a.id === profile.activity)?.factor || 1.2;
+    return Math.round(bmr * factor);
+  }, [bmr, profile.activity]);
+
+  // Never suggest a target below what's needed to keep the body functioning:
+  // the person's own BMR (minimum energy needed at rest), and a general
+  // widely-cited floor of 1200 kcal/day (female) or 1500 kcal/day (male) —
+  // whichever of the two is higher. This is a general guideline, not
+  // personalized medical advice.
+  const minSafeCalories = useMemo(() => {
+    if (!bmr) return null;
+    const genderFloor = profile.gender === "male" ? 1500 : 1200;
+    return Math.round(Math.max(bmr, genderFloor));
+  }, [bmr, profile.gender]);
+
+  const { targetCalories, effectiveRate, rateWasAdjusted } = useMemo(() => {
+    if (!tdee) return { targetCalories: null, effectiveRate: Number(profile.rate), rateWasAdjusted: false };
+    if (profile.goal === "maintain") return { targetCalories: tdee, effectiveRate: 0, rateWasAdjusted: false };
     const dailyAdjust = Math.round((Number(profile.rate) * 7700) / 7);
-    if (profile.goal === "lose") return tdee - dailyAdjust;
-    if (profile.goal === "gain") return tdee + dailyAdjust;
-    return tdee;
-  }, [tdee, profile]);
+    if (profile.goal === "gain") {
+      return { targetCalories: tdee + dailyAdjust, effectiveRate: Number(profile.rate), rateWasAdjusted: false };
+    }
+    // goal === "lose"
+    const rawTarget = tdee - dailyAdjust;
+    if (minSafeCalories && rawTarget < minSafeCalories) {
+      const adjustedDailyDeficit = Math.max(0, tdee - minSafeCalories);
+      const adjustedRate = Math.max(0, +((adjustedDailyDeficit * 7) / 7700).toFixed(2));
+      return { targetCalories: minSafeCalories, effectiveRate: adjustedRate, rateWasAdjusted: true };
+    }
+    return { targetCalories: rawTarget, effectiveRate: Number(profile.rate), rateWasAdjusted: false };
+  }, [tdee, profile, minSafeCalories]);
 
   if (authUser === undefined) {
     return (
@@ -458,7 +486,7 @@ export default function ChitTrack() {
     profile, setProfile, bodyLogs, setBodyLogs, foodLogs, setFoodLogs,
     exerciseLogs, setExerciseLogs, customFoods, setCustomFoods,
     stepLogs, setStepLogs,
-    tdee, targetCalories, latestWeight,
+    tdee, targetCalories, latestWeight, minSafeCalories, effectiveRate, rateWasAdjusted,
     authUser, syncStatus, onSignOut: handleSignOut, onWantsSignIn: handleWantsSignIn,
     gfitConnected, gfitStatus, connectGoogleFit, disconnectGoogleFit, syncGoogleFit,
   };
@@ -557,7 +585,7 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
   const todayEx = exerciseLogs.filter((e) => e.date === date);
   const todaySteps = stepLogs.find((s) => s.date === date);
   const stepKcal = stepsToKcal(todaySteps?.steps, latestWeight);
-  const consumed = todayFood.reduce((s, f) => s + f.kcal * f.qty, 0);
+  const consumed = Math.round(todayFood.reduce((s, f) => s + f.kcal * f.qty, 0));
   const burned = todayEx.reduce((s, e) => s + Number(e.kcal), 0) + stepKcal;
   const net = consumed - burned;
   const target = targetCalories;
@@ -621,7 +649,7 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
       {todayFood.length === 0 && todayEx.length === 0 && !(todaySteps?.steps > 0) && (
         <EmptyHint icon={Utensils} text="Nothing logged yet today. Add a meal or a workout to get started." />
       )}
-      {todayFood.map((f) => <Chit key={f.id} title={f.name} sub={`${f.meal} · x${f.qty}`} value={`${f.kcal * f.qty} kcal`} icon={Utensils} />)}
+      {todayFood.map((f) => <Chit key={f.id} title={f.name} sub={`${f.meal} · x${f.qty}`} value={`${Math.round(f.kcal * f.qty)} kcal`} icon={Utensils} />)}
       {todaySteps?.steps > 0 && (
         <Chit
           title="Steps"
@@ -705,7 +733,7 @@ function EmptyHint({ text, icon: Icon }) {
   );
 }
 
-function Chit({ title, sub, value, icon: Icon, accent, onDelete }) {
+function Chit({ title, sub, value, icon: Icon, accent, onDelete, onEdit }) {
   return (
     <div style={S.chit}>
       <div style={S.chitPerf} />
@@ -718,8 +746,11 @@ function Chit({ title, sub, value, icon: Icon, accent, onDelete }) {
           <div style={{ fontSize: 11, color: C.muted }}>{sub}</div>
         </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
         <span style={{ fontFamily: F.mono, fontSize: 13, fontWeight: 700, color: accent || C.ink }}>{value}</span>
+        {onEdit && (
+          <button onClick={onEdit} style={S.iconBtn}><Pencil size={13} color={C.muted} /></button>
+        )}
         {onDelete && (
           <button onClick={onDelete} style={S.iconBtn}><Trash2 size={14} color={C.chili} /></button>
         )}
@@ -740,6 +771,8 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
   const [customMode, setCustomMode] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customKcal, setCustomKcal] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editQty, setEditQty] = useState(1);
 
   const allFoods = useMemo(() => [...FOOD_DB, ...customFoods], [customFoods]);
   const filtered = useMemo(() => {
@@ -749,7 +782,7 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
   }, [query, allFoods]);
 
   const dayEntries = foodLogs.filter((f) => f.date === date);
-  const dayTotal = dayEntries.reduce((s, f) => s + f.kcal * f.qty, 0);
+  const dayTotal = Math.round(dayEntries.reduce((s, f) => s + f.kcal * f.qty, 0));
 
   const addFood = (food) => {
     setFoodLogs((prev) => [...prev, { id: uid(), date, meal, name: food.name, kcal: food.kcal, qty }]);
@@ -766,6 +799,11 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
   };
 
   const removeEntry = (id) => setFoodLogs((prev) => prev.filter((f) => f.id !== id));
+  const startEdit = (f) => { setEditingId(f.id); setEditQty(f.qty); };
+  const saveEdit = (id) => {
+    setFoodLogs((prev) => prev.map((f) => (f.id === id ? { ...f, qty: editQty } : f)));
+    setEditingId(null);
+  };
 
   return (
     <div style={S.screen}>
@@ -843,9 +881,29 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
         return (
           <div key={m}>
             <SectionLabel>{m}</SectionLabel>
-            {entries.map((f) => (
-              <Chit key={f.id} title={f.name} sub={`x${f.qty} serving${f.qty > 1 ? "s" : ""}`} value={`${f.kcal * f.qty} kcal`} icon={Utensils} onDelete={() => removeEntry(f.id)} />
-            ))}
+            {entries.map((f) =>
+              editingId === f.id ? (
+                <div key={f.id} style={S.chit}>
+                  <div style={S.chitPerf} />
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: C.ink, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{f.name}</div>
+                    <div style={{ fontSize: 11, color: C.muted }}>{f.kcal} kcal per serving</div>
+                  </div>
+                  <QtyStepper qty={editQty} setQty={setEditQty} />
+                  <button style={S.linkBtn} onClick={() => saveEdit(f.id)}>Save</button>
+                </div>
+              ) : (
+                <Chit
+                  key={f.id}
+                  title={f.name}
+                  sub={`x${f.qty} serving${f.qty !== 1 ? "s" : ""}`}
+                  value={`${Math.round(f.kcal * f.qty)} kcal`}
+                  icon={Utensils}
+                  onEdit={() => startEdit(f)}
+                  onDelete={() => removeEntry(f.id)}
+                />
+              )
+            )}
           </div>
         );
       })}
@@ -857,9 +915,9 @@ function FoodTab({ foodLogs, setFoodLogs, customFoods, setCustomFoods }) {
 function QtyStepper({ qty, setQty }) {
   return (
     <div style={S.stepper}>
-      <button style={S.stepperBtn} onClick={() => setQty((q) => Math.max(0.5, +(q - 0.5).toFixed(1)))}>−</button>
-      <span style={{ fontFamily: F.mono, fontSize: 13, width: 28, textAlign: "center" }}>{qty}</span>
-      <button style={S.stepperBtn} onClick={() => setQty((q) => +(q + 0.5).toFixed(1))}>+</button>
+      <button style={S.stepperBtn} onClick={() => setQty((q) => Math.max(0.25, +(q - 0.25).toFixed(2)))}>−</button>
+      <span style={{ fontFamily: F.mono, fontSize: 13, width: 32, textAlign: "center" }}>{qty}</span>
+      <button style={S.stepperBtn} onClick={() => setQty((q) => +(q + 0.25).toFixed(2))}>+</button>
     </div>
   );
 }
@@ -1134,7 +1192,7 @@ function ProgressTab({ bodyLogs, stepLogs }) {
 /* Profile Tab                                                             */
 /* ---------------------------------------------------------------------- */
 
-function ProfileTab({ profile, setProfile, tdee, targetCalories, latestWeight, authUser, syncStatus, onSignOut, onWantsSignIn, gfitConnected, gfitStatus, connectGoogleFit, disconnectGoogleFit }) {
+function ProfileTab({ profile, setProfile, tdee, targetCalories, latestWeight, minSafeCalories, effectiveRate, rateWasAdjusted, authUser, syncStatus, onSignOut, onWantsSignIn, gfitConnected, gfitStatus, connectGoogleFit, disconnectGoogleFit }) {
   const set = (k, v) => setProfile((p) => ({ ...p, [k]: v }));
 
   return (
@@ -1268,12 +1326,29 @@ function ProfileTab({ profile, setProfile, tdee, targetCalories, latestWeight, a
             <StatRow label="Current weight" value={`${latestWeight} kg`} />
             <StatRow label="Maintenance (TDEE)" value={`${tdee} kcal/day`} />
             <StatRow label={`Target to ${profile.goal}`} value={`${targetCalories} kcal/day`} accent={C.jade} />
+            {profile.goal === "lose" && minSafeCalories && (
+              <StatRow label="Your safe minimum" value={`${minSafeCalories} kcal/day`} accent={C.muted} />
+            )}
           </>
         )}
       </div>
 
+      {rateWasAdjusted && (
+        <div style={{ ...S.miniCard, background: C.turmericTint, alignItems: "flex-start" }}>
+          <div style={{ ...S.miniCardIcon, background: C.surface, flexShrink: 0 }}><AlertCircle size={15} color={C.turmeric} /></div>
+          <span style={{ fontSize: 12.5, color: C.ink, lineHeight: 1.5 }}>
+            Your selected rate ({profile.rate} kg/week) would have put your target below a safe
+            minimum, so it's been capped at {minSafeCalories} kcal/day instead — that works out to
+            roughly {effectiveRate} kg/week for you right now.
+          </span>
+        </div>
+      )}
+
       <div style={S.footNote}>
-        Estimates use the Mifflin-St Jeor formula. They're a starting point — adjust based on real-world results over a few weeks.
+        Estimates use the Mifflin-St Jeor formula. Daily targets are never suggested below your
+        estimated BMR or a general floor of 1,200 kcal (female) / 1,500 kcal (male) — these are
+        common guidelines, not personalized medical advice. If you have specific health needs,
+        please check with a doctor or dietitian before changing how much you eat.
       </div>
     </div>
   );
