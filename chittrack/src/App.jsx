@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine,
 } from "recharts";
 import {
-  Home, Utensils, Dumbbell, Ruler, TrendingUp, User, Plus, Trash2, Pencil,
+  Home, Utensils, Dumbbell, Ruler, TrendingUp, TrendingDown, User, Plus, Trash2, Pencil,
   ChevronLeft, ChevronRight, Search, X, Cloud, CloudOff, RefreshCw, AlertCircle, LogOut,
   Footprints, Link2, Unlink, Smile,
 } from "lucide-react";
@@ -281,6 +281,17 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 // Rough estimate: ~0.0005 kcal per step per kg of body weight, in line
 // with the ~40-50 kcal per 1,000 steps commonly cited for an average adult.
 const stepsToKcal = (steps, weightKg) => Math.round(0.0005 * (weightKg || 65) * (steps || 0));
+// Same BMR/TDEE formula used for "today", but takes an arbitrary weight so
+// it can be reused for historical dates (via carried-forward weigh-ins).
+const tdeeForWeight = (weightKg, profile) => {
+  const { age, gender, height, activity } = profile;
+  if (!age || !height || !weightKg) return null;
+  const bmr = gender === "male"
+    ? 10 * weightKg + 6.25 * height - 5 * age + 5
+    : 10 * weightKg + 6.25 * height - 5 * age - 161;
+  const factor = ACTIVITY_LEVELS.find((a) => a.id === activity)?.factor || 1.2;
+  return bmr * factor;
+};
 
 const STORAGE_PREFIX = "chittrack:";
 
@@ -304,7 +315,7 @@ function storeSet(key, value) {
 /* Root component                                                          */
 /* ---------------------------------------------------------------------- */
 
-export default function ChitTrack() {
+export default function MyFitnessTracker() {
   const [tab, setTab] = useState("dashboard");
 
   // undefined = auth state still loading, null = signed out, object = signed in
@@ -578,7 +589,7 @@ function TabBtn({ icon: Icon, label, active, onClick }) {
 /* Dashboard                                                               */
 /* ---------------------------------------------------------------------- */
 
-function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs, setStepLogs, profile, gfitConnected, latestWeight }) {
+function Dashboard({ foodLogs, exerciseLogs, targetCalories, tdee, bodyLogs, stepLogs, setStepLogs, profile, gfitConnected, latestWeight }) {
   const date = todayStr();
   const todayFood = foodLogs.filter((f) => f.date === date);
   const todayEx = exerciseLogs.filter((e) => e.date === date);
@@ -590,6 +601,12 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
   const target = targetCalories;
   const remaining = target ? target - net : null;
   const pct = target ? Math.min(100, Math.max(0, (net / target) * 100)) : 0;
+
+  // If today's net calories were repeated every day, what weekly rate of
+  // change would that put you on — relative to your maintenance (TDEE),
+  // not your target (since target already bakes in a chosen deficit).
+  const impliedDailyDelta = tdee ? tdee - net : null; // positive = deficit
+  const impliedWeeklyKg = impliedDailyDelta !== null ? (impliedDailyDelta * 7) / 7700 : null;
 
   const latestBody = [...bodyLogs].sort((a, b) => b.date.localeCompare(a.date))[0];
 
@@ -629,6 +646,25 @@ function Dashboard({ foodLogs, exerciseLogs, targetCalories, bodyLogs, stepLogs,
           <StatRow label="Target" value={target ?? "set in Me tab"} />
         </div>
       </div>
+
+      {impliedWeeklyKg !== null && (
+        <div style={{ ...S.miniCard, background: impliedWeeklyKg >= 0 ? C.jadeTint : C.turmericTint }}>
+          <div style={S.miniCardIcon}>
+            {impliedWeeklyKg >= 0
+              ? <TrendingDown size={15} color={C.jade} />
+              : <TrendingUp size={15} color={C.turmeric} />}
+          </div>
+          <span style={{ fontSize: 13, color: C.ink, lineHeight: 1.4 }}>
+            {Math.abs(impliedWeeklyKg) < 0.02 ? (
+              <>At today's net calories, you're roughly at <b>maintenance</b> pace.</>
+            ) : impliedWeeklyKg > 0 ? (
+              <>At today's net calories, that's about a <b>{impliedWeeklyKg.toFixed(2)} kg/week loss</b> pace.</>
+            ) : (
+              <>At today's net calories, that's about a <b>{Math.abs(impliedWeeklyKg).toFixed(2)} kg/week gain</b> pace.</>
+            )}
+          </span>
+        </div>
+      )}
 
       <StepsCard steps={todaySteps?.steps ?? 0} source={todaySteps?.source} goal={profile.stepGoal || 8000} date={date} setStepLogs={setStepLogs} gfitConnected={gfitConnected} />
 
@@ -1123,6 +1159,9 @@ const METRICS = [
   { id: "muscle", label: "Muscle %", unit: "%", color: "#E8A33D", source: "body" },
   { id: "waist", label: "Waist", unit: "cm", color: "#3E7CB1", source: "body" },
   { id: "steps", label: "Steps", unit: "", color: "#7A4FB5", source: "steps" },
+  { id: "exercise", label: "Exercise", unit: " min", color: "#2E9E6C", source: "exercise" },
+  { id: "burned", label: "Calories Burned", unit: " kcal", color: "#D9534F", source: "burned" },
+  { id: "deficit", label: "Deficit/Surplus", unit: " kcal", color: "#6E56CF", source: "deficit" },
 ];
 const RANGES = [
   { id: "4w", label: "4 weeks", days: 28 },
@@ -1131,7 +1170,7 @@ const RANGES = [
   { id: "all", label: "All time", days: null },
 ];
 
-function ProgressTab({ bodyLogs, stepLogs }) {
+function ProgressTab({ bodyLogs, stepLogs, exerciseLogs, foodLogs, profile }) {
   const [metric, setMetric] = useState("weight");
   const [range, setRange] = useState("3m");
 
@@ -1139,17 +1178,62 @@ function ProgressTab({ bodyLogs, stepLogs }) {
   const activeRange = RANGES.find((r) => r.id === range);
 
   const data = useMemo(() => {
-    const sourceLogs = activeMetric.source === "steps" ? stepLogs : bodyLogs;
-    let logs = [...sourceLogs].sort((a, b) => a.date.localeCompare(b.date));
+    let logs, field;
+    if (activeMetric.source === "steps") {
+      logs = stepLogs;
+      field = "steps";
+    } else if (activeMetric.source === "exercise") {
+      // Multiple workouts can be logged on the same day, so total minutes
+      // per date first, unlike body/step logs which are already one-per-day.
+      const byDate = new Map();
+      for (const e of exerciseLogs) {
+        byDate.set(e.date, (byDate.get(e.date) || 0) + Number(e.duration || 0));
+      }
+      logs = Array.from(byDate.entries()).map(([date, minutes]) => ({ date, minutes }));
+      field = "minutes";
+    } else if (activeMetric.source === "burned" || activeMetric.source === "deficit") {
+      const sortedBodyLogs = [...bodyLogs].sort((a, b) => a.date.localeCompare(b.date));
+      // Most recent known weigh-in on or before a given date — lets us
+      // estimate historical TDEE/step-calories reasonably rather than
+      // only using today's weight for every past day.
+      const weightAsOf = (date) => {
+        let w = null;
+        for (const b of sortedBodyLogs) {
+          if (b.date <= date) w = b.weight;
+          else break;
+        }
+        return w;
+      };
+      const dateSet = new Set([
+        ...foodLogs.map((f) => f.date),
+        ...exerciseLogs.map((e) => e.date),
+        ...stepLogs.filter((s) => s.steps > 0).map((s) => s.date),
+      ]);
+      logs = Array.from(dateSet).map((date) => {
+        const consumed = foodLogs.filter((f) => f.date === date).reduce((s, f) => s + f.kcal * f.qty, 0);
+        const exerciseKcal = exerciseLogs.filter((e) => e.date === date).reduce((s, e) => s + Number(e.kcal), 0);
+        const stepEntry = stepLogs.find((s) => s.date === date);
+        const w = weightAsOf(date);
+        const stepKcal = stepsToKcal(stepEntry?.steps, w);
+        const burned = Math.round(exerciseKcal + stepKcal);
+        const tdee = tdeeForWeight(w, profile);
+        const deficit = tdee !== null ? Math.round(tdee - (consumed - burned)) : null;
+        return { date, burned, deficit };
+      });
+      field = activeMetric.source;
+    } else {
+      logs = bodyLogs;
+      field = metric;
+    }
+    logs = [...logs].sort((a, b) => a.date.localeCompare(b.date));
     if (activeRange.days) {
       const cutoff = addDays(todayStr(), -activeRange.days);
       logs = logs.filter((b) => b.date >= cutoff);
     }
-    const field = activeMetric.source === "steps" ? "steps" : metric;
     return logs
       .filter((b) => b[field] !== null && b[field] !== undefined && b[field] !== "")
       .map((b) => ({ date: b.date, label: new Date(b.date + "T00:00:00").toLocaleDateString(undefined, { day: "numeric", month: "short" }), value: b[field] }));
-  }, [bodyLogs, stepLogs, metric, activeRange, activeMetric]);
+  }, [bodyLogs, stepLogs, exerciseLogs, foodLogs, profile, metric, activeRange, activeMetric]);
 
   return (
     <div style={S.screen}>
@@ -1184,6 +1268,7 @@ function ProgressTab({ bodyLogs, stepLogs }) {
                   contentStyle={{ fontFamily: F.mono, fontSize: 12, borderRadius: 8, border: `1px solid ${C.line}` }}
                   formatter={(v) => [`${v} ${activeMetric.unit}`, activeMetric.label]}
                 />
+                {metric === "deficit" && <ReferenceLine y={0} stroke={C.muted} strokeDasharray="4 4" />}
                 <Line type="monotone" dataKey="value" stroke={activeMetric.color} strokeWidth={2.5} dot={{ r: 3 }} activeDot={{ r: 5 }} />
               </LineChart>
             </ResponsiveContainer>
