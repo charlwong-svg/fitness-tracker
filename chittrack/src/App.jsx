@@ -5,7 +5,7 @@ import {
 import {
   Home, Utensils, Dumbbell, Ruler, TrendingUp, TrendingDown, User, Plus, Trash2, Pencil,
   ChevronLeft, ChevronRight, Search, X, Cloud, CloudOff, RefreshCw, AlertCircle, LogOut,
-  Footprints, Link2, Unlink, Smile,
+  Footprints, Link2, Unlink,
 } from "lucide-react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, firebaseEnabled } from "./firebase.js";
@@ -507,11 +507,14 @@ export default function MyFitnessTracker() {
       <header style={S.header}>
         <div style={S.headerTicket}>
           <div style={S.headerStamp}>
-            <Smile size={17} color="#fff" strokeWidth={2.2} />
+            <svg width="27" height="27" viewBox="0 0 24 24">
+              <path fill="#fff" d="M12,9 C9.5,6.3 5.7,7 4.6,11.2 C3.3,16.1 6.4,20.5 11,20.9 C11.5,21 12,20.8 12,20.8 C12,20.8 12.5,21 13,20.9 C17.6,20.5 20.7,16.1 19.4,11.2 C18.3,7 14.5,6.3 12,9 Z"></path>
+              <path fill="#fff" d="M11.6,9 C11.4,7.5 11.8,5.5 13.3,4.3 C13.6,4.1 13.5,3.7 13.2,3.7 C11.3,3.9 10.7,6.2 10.9,8.6 C10.9,9 11.5,9.3 11.6,9 Z"></path>
+              <ellipse fill="#fff" cx="14.3" cy="5.6" rx="1.7" ry="0.95" transform="rotate(-25 14.3 5.6)"></ellipse>
+            </svg>
           </div>
           <div style={S.headerBrandWrap}>
             <span style={S.headerBrand}>My Fitness Tracker</span>
-            <span style={S.headerSub}>your daily food chit</span>
           </div>
         </div>
         <SyncBadge status={syncStatus} authUser={authUser} />
@@ -1260,10 +1263,10 @@ function ProgressTab({ bodyLogs, stepLogs, exerciseLogs, foodLogs, profile }) {
         ) : (
           <div style={{ width: "100%", height: 260 }}>
             <ResponsiveContainer>
-              <LineChart data={data} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
+              <LineChart data={data} margin={{ top: 8, right: 12, left: 4, bottom: 0 }}>
                 <CartesianGrid stroke={C.line} strokeDasharray="3 3" />
                 <XAxis dataKey="label" tick={{ fontSize: 10, fill: C.muted }} />
-                <YAxis tick={{ fontSize: 10, fill: C.muted }} domain={["auto", "auto"]} unit={activeMetric.unit} />
+                <YAxis tick={{ fontSize: 10, fill: C.muted }} domain={["auto", "auto"]} width={44} />
                 <Tooltip
                   contentStyle={{ fontFamily: F.mono, fontSize: 12, borderRadius: 8, border: `1px solid ${C.line}` }}
                   formatter={(v) => [`${v} ${activeMetric.unit}`, activeMetric.label]}
