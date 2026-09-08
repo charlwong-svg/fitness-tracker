@@ -50,7 +50,7 @@ const SHADOW = {
 };
 
 const S = {
-  app: { fontFamily: F.body, background: C.bg, minHeight: "100vh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
+  app: { fontFamily: F.body, background: C.bg, minHeight: "100dvh", maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column", color: C.ink },
   header: { padding: "20px 18px 14px", background: C.bg, position: "relative" },
   headerTicket: { display: "flex", alignItems: "center", gap: 10 },
   headerStamp: { width: 36, height: 36, borderRadius: "50%", background: C.jade, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: SHADOW.btn },
@@ -62,7 +62,7 @@ const S = {
   main: { flex: 1, padding: "6px 16px 90px", overflowY: "auto" },
   screen: { display: "flex", flexDirection: "column", gap: 10 },
   h2: { fontFamily: F.display, fontSize: 21, fontWeight: 800, margin: "8px 0 2px", color: C.ink, letterSpacing: -0.3 },
-  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(8px + env(safe-area-inset-bottom))", maxWidth: 480, margin: "0 auto", width: "100%", boxShadow: "0 -2px 12px rgba(24,36,32,0.04)" },
+  tabbar: { position: "sticky", bottom: 0, background: C.surface, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-around", padding: "8px 4px calc(22px + env(safe-area-inset-bottom, 0px))", maxWidth: 480, margin: "0 auto", width: "100%", boxShadow: "0 -2px 12px rgba(24,36,32,0.04)" },
   tabBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", padding: "6px 14px", cursor: "pointer", borderRadius: 14, transition: "background 0.15s ease" },
   tabBtnActive: { background: C.jadeTint },
 
@@ -476,7 +476,7 @@ export default function MyFitnessTracker() {
 
   if (authUser === undefined) {
     return (
-      <div style={{ ...S.app, alignItems: "center", justifyContent: "center", display: "flex", minHeight: "100vh" }}>
+      <div style={{ ...S.app, alignItems: "center", justifyContent: "center", display: "flex", minHeight: "100dvh" }}>
         <RefreshCw className="spin" size={26} color={C.jade} />
         <style>{CSS_BASE}</style>
       </div>
