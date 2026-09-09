@@ -8,8 +8,8 @@ import { db, firebaseEnabled } from "./firebase.js";
 // debounced setDoc. localStorage stays the source of truth when signed out.
 export function useCloudSync(user, state) {
   const {
-    profile, bodyLogs, foodLogs, exerciseLogs, customFoods, stepLogs,
-    setProfile, setBodyLogs, setFoodLogs, setExerciseLogs, setCustomFoods, setStepLogs,
+    profile, bodyLogs, foodLogs, exerciseLogs, customFoods, customExercises, stepLogs,
+    setProfile, setBodyLogs, setFoodLogs, setExerciseLogs, setCustomFoods, setCustomExercises, setStepLogs,
   } = state;
 
   const [status, setStatus] = useState("offline"); // offline | syncing | synced | error
@@ -37,11 +37,12 @@ export function useCloudSync(user, state) {
           setFoodLogs(d.foodLogs || []);
           setExerciseLogs(d.exerciseLogs || []);
           setCustomFoods(d.customFoods || []);
+          setCustomExercises(d.customExercises || []);
           setStepLogs(d.stepLogs || []);
         } else {
           // First sign-in on this account: push whatever's local up.
           setDoc(ref, {
-            profile, bodyLogs, foodLogs, exerciseLogs, customFoods, stepLogs,
+            profile, bodyLogs, foodLogs, exerciseLogs, customFoods, customExercises, stepLogs,
             updatedAt: Date.now(),
           });
         }
@@ -71,7 +72,7 @@ export function useCloudSync(user, state) {
         const ref = doc(db, "users", user.uid);
         await setDoc(
           ref,
-          { profile, bodyLogs, foodLogs, exerciseLogs, customFoods, stepLogs, updatedAt: Date.now() },
+          { profile, bodyLogs, foodLogs, exerciseLogs, customFoods, customExercises, stepLogs, updatedAt: Date.now() },
           { merge: true }
         );
         setStatus("synced");
@@ -82,7 +83,7 @@ export function useCloudSync(user, state) {
     }, 800);
     return () => clearTimeout(debounceRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, bodyLogs, foodLogs, exerciseLogs, customFoods, stepLogs, user]);
+  }, [profile, bodyLogs, foodLogs, exerciseLogs, customFoods, customExercises, stepLogs, user]);
 
   return status;
 }
