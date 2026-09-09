@@ -336,6 +336,7 @@ export default function MyFitnessTracker() {
   const [foodLogs, setFoodLogs] = useState(() => storeGet("foodLogs", []));
   const [exerciseLogs, setExerciseLogs] = useState(() => storeGet("exerciseLogs", []));
   const [customFoods, setCustomFoods] = useState(() => storeGet("customFoods", []));
+  const [customExercises, setCustomExercises] = useState(() => storeGet("customExercises", []));
   const [stepLogs, setStepLogs] = useState(() => storeGet("stepLogs", []));
 
   useEffect(() => { storeSet("profile", profile); }, [profile]);
@@ -343,11 +344,12 @@ export default function MyFitnessTracker() {
   useEffect(() => { storeSet("foodLogs", foodLogs); }, [foodLogs]);
   useEffect(() => { storeSet("exerciseLogs", exerciseLogs); }, [exerciseLogs]);
   useEffect(() => { storeSet("customFoods", customFoods); }, [customFoods]);
+  useEffect(() => { storeSet("customExercises", customExercises); }, [customExercises]);
   useEffect(() => { storeSet("stepLogs", stepLogs); }, [stepLogs]);
 
   const syncStatus = useCloudSync(authUser, {
-    profile, bodyLogs, foodLogs, exerciseLogs, customFoods, stepLogs,
-    setProfile, setBodyLogs, setFoodLogs, setExerciseLogs, setCustomFoods, setStepLogs,
+    profile, bodyLogs, foodLogs, exerciseLogs, customFoods, customExercises, stepLogs,
+    setProfile, setBodyLogs, setFoodLogs, setExerciseLogs, setCustomFoods, setCustomExercises, setStepLogs,
   });
 
   // --- Google Fit: connection state + auto-sync ---
@@ -494,7 +496,7 @@ export default function MyFitnessTracker() {
 
   const shared = {
     profile, setProfile, bodyLogs, setBodyLogs, foodLogs, setFoodLogs,
-    exerciseLogs, setExerciseLogs, customFoods, setCustomFoods,
+    exerciseLogs, setExerciseLogs, customFoods, setCustomFoods, customExercises, setCustomExercises,
     stepLogs, setStepLogs,
     tdee, targetCalories, latestWeight, minSafeCalories, effectiveRate, rateWasAdjusted,
     authUser, syncStatus, onSignOut: handleSignOut, onWantsSignIn: handleWantsSignIn,
@@ -991,7 +993,7 @@ function DateNav({ date, setDate }) {
 /* Exercise Tab                                                            */
 /* ---------------------------------------------------------------------- */
 
-function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight, stepLogs }) {
+function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight, stepLogs, customExercises, setCustomExercises }) {
   const [date, setDate] = useState(todayStr());
   const [selected, setSelected] = useState(null);
   const [duration, setDuration] = useState(30);
@@ -999,9 +1001,14 @@ function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight, stepLogs }) 
   const [customMode, setCustomMode] = useState(false);
   const [customName, setCustomName] = useState("");
 
+  const combinedExercises = useMemo(() => [
+    ...EXERCISE_DB.map((e) => ({ ...e, source: "builtin" })),
+    ...customExercises.map((e) => ({ ...e, source: "custom" })),
+  ], [customExercises]);
+
   const weight = latestWeight || 65;
   const estimate = useMemo(() => {
-    if (!selected) return null;
+    if (!selected || selected.source !== "builtin") return null;
     return Math.round((selected.met * 3.5 * weight / 200) * duration);
   }, [selected, duration, weight]);
 
@@ -1010,11 +1017,41 @@ function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight, stepLogs }) 
   const stepKcal = stepsToKcal(daySteps?.steps, latestWeight);
   const dayTotal = dayEntries.reduce((s, e) => s + Number(e.kcal), 0) + stepKcal;
 
+  const selectItem = (item) => {
+    setSelected(item);
+    setCustomMode(false);
+    if (item.source === "custom") {
+      // Pre-fill with what you used last time — still fully editable,
+      // since duration/effort naturally varies session to session.
+      setDuration(item.duration || 30);
+      setKcalOverride(item.kcal ? String(item.kcal) : "");
+    } else {
+      setDuration(30);
+      setKcalOverride("");
+    }
+  };
+
   const addExercise = () => {
     const name = customMode ? customName.trim() : selected?.name;
     if (!name) return;
     const kcal = kcalOverride ? Number(kcalOverride) : (estimate || 0);
-    setExerciseLogs((prev) => [...prev, { id: uid(), date, name, duration: Number(duration), kcal }]);
+    const dur = Number(duration);
+    setExerciseLogs((prev) => [...prev, { id: uid(), date, name, duration: dur, kcal }]);
+
+    // Save (or refresh) a reusable custom exercise so it doesn't need
+    // re-entering from scratch next time — same idea as custom foods.
+    if (customMode) {
+      setCustomExercises((prev) => {
+        const existing = prev.find((c) => c.name.toLowerCase() === name.toLowerCase());
+        if (existing) {
+          return prev.map((c) => (c.id === existing.id ? { ...c, kcal, duration: dur } : c));
+        }
+        return [...prev, { id: uid(), name, kcal, duration: dur }];
+      });
+    } else if (selected?.source === "custom") {
+      setCustomExercises((prev) => prev.map((c) => (c.id === selected.id ? { ...c, kcal, duration: dur } : c)));
+    }
+
     setSelected(null); setKcalOverride(""); setCustomName(""); setCustomMode(false); setDuration(30);
   };
 
@@ -1028,14 +1065,16 @@ function ExerciseTab({ exerciseLogs, setExerciseLogs, latestWeight, stepLogs }) 
         {!customMode ? (
           <>
             <div style={S.resultsList}>
-              {EXERCISE_DB.map((ex) => (
+              {combinedExercises.map((ex) => (
                 <button
                   key={ex.id}
                   style={{ ...S.resultRow, ...(selected?.id === ex.id ? { background: C.jadeTint } : {}) }}
-                  onClick={() => setSelected(ex)}
+                  onClick={() => selectItem(ex)}
                 >
                   <div style={{ fontSize: 13.5, fontWeight: 600, color: C.ink }}>{ex.name}</div>
-                  <span style={{ fontSize: 11, color: C.muted }}>MET {ex.met}</span>
+                  <span style={{ fontSize: 11, color: C.muted }}>
+                    {ex.source === "custom" ? `Custom · last ${ex.duration}min` : `MET ${ex.met}`}
+                  </span>
                 </button>
               ))}
             </div>
